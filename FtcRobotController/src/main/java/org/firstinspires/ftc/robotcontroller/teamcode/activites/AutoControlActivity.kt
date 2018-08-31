@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.teamcode
+package org.firstinspires.ftc.robotcontroller.teamcode.activites
 
 import android.app.Activity
 import android.content.Context

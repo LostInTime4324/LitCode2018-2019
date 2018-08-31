@@ -5,7 +5,8 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.widget.EditText
 import android.widget.SeekBar
-import org.firstinspires.ftc.robotcontroller.teamcode.VariableControlActivity.Companion.scrollBarRange
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.Range
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.VariableControlActivity.Companion.scrollBarRange
 import java.math.BigDecimal
 import java.math.MathContext
 import java.util.*

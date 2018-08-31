@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.robotcontroller.teamcode
+package org.firstinspires.ftc.robotcontroller.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.robotcontroller.teamcode.Navigation
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables
 import java.lang.Math.abs
 
-@TeleOp(name = "TeleOp")
+@TeleOp(name = "TeleOpMain")
 class TeleOpMain : OpMode() {
 
     val leftX: Double get() = gamepad1.left_stick_x.toDouble()
