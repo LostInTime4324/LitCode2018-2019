@@ -19,31 +19,31 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry, var pos
     val backLeftMotor = hardwareMap[BACK_LEFT_MOTOR] as DcMotor
     val frontRightMotor = hardwareMap[FRONT_RIGHT_MOTOR] as DcMotor
     val backRightMotor by lazy {
-        telemetry.addData("Abbdulla is gay", "")
-        telemetry.update()
         hardwareMap[BACK_RIGHT_MOTOR] as DcMotor
     }
 
     val imu: BNO055IMU by lazy {
         val params = BNO055IMU.Parameters()
-        params.mode = BNO055IMU.SensorMode.IMU
-        params.angleUnit = BNO055IMU.AngleUnit.DEGREES
-        params.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
-        params.loggingEnabled = false
+        with(params) {
+            mode = BNO055IMU.SensorMode.IMU
+            angleUnit = BNO055IMU.AngleUnit.DEGREES
+            accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
+            loggingEnabled = false
+        }
         val IMU = hardwareMap.get(BNO055IMU::class.java, "imu")
         IMU.initialize(params)
         IMU.angularOrientation.axesOrder = AxesOrder.ZXY
         IMU
     }
 
-    val turnPID = PID(vars[Names.Turn_Kp], vars[Names.Turn_Kd], vars[Names.Turn_Ki], ::turnController)
-    val drivePID = PID(vars[Names.Drive_Kp], vars[Names.Drive_Kd], vars[Names.Drive_Ki], ::driveController)
-    val frontLeftPID = PID(vars[Names.Front_Left_Motor_Kp], vars[Names.Front_Left_Motor_Kd], vars[Names.Front_Left_Motor_Ki], ::motorController)
-    val frontRightPID = PID(vars[Names.Front_Right_Motor_Kp], vars[Names.Front_Right_Motor_Kd], vars[Names.Front_Right_Motor_Ki], ::motorController)
-    val backLeftPID = PID(vars[Names.Back_Left_Motor_Kp], vars[Names.Back_Left_Motor_Kd], vars[Names.Back_Left_Motor_Ki], ::motorController)
-    val backRightPID = PID(vars[Names.Back_Right_Motor_Kp], vars[Names.Back_Right_Motor_Kd], vars[Names.Back_Right_Motor_Ki], ::motorController)
+    val turnPID = PID(vars[Numbers.Turn_Kp], vars[Numbers.Turn_Kd], vars[Numbers.Turn_Ki], ::turnController)
+    val drivePID = PID(vars[Numbers.Drive_Kp], vars[Numbers.Drive_Kd], vars[Numbers.Drive_Ki], ::driveController)
+    val frontLeftPID = PID(vars[Numbers.Front_Left_Motor_Kp], vars[Numbers.Front_Left_Motor_Kd], vars[Numbers.Front_Left_Motor_Ki], ::motorController)
+    val frontRightPID = PID(vars[Numbers.Front_Right_Motor_Kp], vars[Numbers.Front_Right_Motor_Kd], vars[Numbers.Front_Right_Motor_Ki], ::motorController)
+    val backLeftPID = PID(vars[Numbers.Back_Left_Motor_Kp], vars[Numbers.Back_Left_Motor_Kd], vars[Numbers.Back_Left_Motor_Ki], ::motorController)
+    val backRightPID = PID(vars[Numbers.Back_Right_Motor_Kp], vars[Numbers.Back_Right_Motor_Kd], vars[Numbers.Back_Right_Motor_Ki], ::motorController)
 
-    val heading = imu.getAngularOrientation().firstAngle
+    val heading get() = imu.getAngularOrientation().firstAngle
 
     fun motorController(power: Double, setPoint: Double) : Double{
         return 0.0

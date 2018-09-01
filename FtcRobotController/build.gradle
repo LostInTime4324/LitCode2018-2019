@@ -3,6 +3,7 @@
 //
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
 
@@ -30,4 +31,5 @@ repositories {
 apply from: 'build.release.gradle'
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile 'com.jjoe64:graphview:4.2.1'
 }

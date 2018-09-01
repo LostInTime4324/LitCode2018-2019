@@ -51,34 +51,31 @@ class PID(var Kp: Double, var Kd: Double, var Ki: Double, val controller: (power
     var errorIntegral = 0.0
 
     private fun integrate() {
-        if (prevError != 0.0)
-            errorIntegral += (error + prevError) / 2.0 * dt
-        else
-            errorIntegral += error * dt
+            errorIntegral += if (prevError != 0.0) (error + prevError) / 2.0 * dt else error * dt
     }
 
     fun addPoints() {
-        val constantTime = time
-        errorPoints.add(Vector(constantTime, error))
-        derivativePoints.add(Vector(constantTime, errorDerivative))
-        integralPoints.add(Vector(constantTime, errorDerivative))
+        val t = time
+        errorPoints.add(Vector(t, error))
+        derivativePoints.add(Vector(t, errorDerivative))
+        integralPoints.add(Vector(t, errorIntegral))
     }
 
     fun averagedArray(array: Array<Vector>, num: Int): Array<Vector> {
-        return Array<Vector>(array.size) {
-            val range = max(0, it - num) until min(array.size, it + num + 1)
-            Vector(array[it].x, array.slice(range).sumByDouble { it.y } / array.size)
+        return Array(array.size) { i ->
+            val range = max(0, i - num) until min(array.size, i + num + 1)
+            Vector(array[i].x, array.slice(range).sumByDouble { it.y } / (range.last - range.first))
         }
     }
 
     fun createGraphs() {
-        absErrorPoints = Array<Vector>(size) {
+        absErrorPoints = Array(size) {
             Vector(aveErrorPoints[it].x, abs(aveErrorPoints[it].y))
         }
 
         aveErrorPoints = averagedArray(errorPoints.toTypedArray(), 1)
 
-        aveDerPoints = Array<Vector>(size) {
+        aveDerPoints = Array(size) {
             if (it == 0) Vector(aveErrorPoints[it].x, (aveErrorPoints[it].y - aveErrorPoints[it + 1].y) / (aveErrorPoints[it].x - aveErrorPoints[it + 1].x))
             else if (it == size - 1) Vector(aveErrorPoints[it].x, (aveErrorPoints[it - 1].y - aveErrorPoints[it].y) / (aveErrorPoints[it - 1].x - aveErrorPoints[it].x))
             else Vector(aveErrorPoints[it].x, (aveErrorPoints[it - 1].y - aveErrorPoints[it + 1].y) / (aveErrorPoints[it - 1].x - aveErrorPoints[it + 1].x))
@@ -107,12 +104,14 @@ class PID(var Kp: Double, var Kd: Double, var Ki: Double, val controller: (power
 
     fun addGraphs() {
         createGraphs()
-        GraphActivity.graphs += GraphActivity.Graph(errorPoints.toTypedArray(), "Error Points")
-        GraphActivity.graphs += GraphActivity.Graph(derivativePoints.toTypedArray(), "Derivative Points")
-        GraphActivity.graphs += GraphActivity.Graph(integralPoints.toTypedArray(), "Integral Points")
-        GraphActivity.graphs += GraphActivity.Graph(aveErrorPoints, "Averaged Error Points")
-        GraphActivity.graphs += GraphActivity.Graph(aveDerPoints, "Averaged Derivative Points")
-        GraphActivity.graphs += GraphActivity.Graph(zeros.toTypedArray(), "Zeros")
+        with(GraphActivity) {
+            graphs += GraphActivity.Graph(errorPoints.toTypedArray(), "Error Points")
+            graphs += GraphActivity.Graph(derivativePoints.toTypedArray(), "Derivative Points")
+            graphs += GraphActivity.Graph(integralPoints.toTypedArray(), "Integral Points")
+            graphs += GraphActivity.Graph(aveErrorPoints, "Averaged Error Points")
+            graphs += GraphActivity.Graph(aveDerPoints, "Averaged Derivative Points")
+            graphs += GraphActivity.Graph(zeros.toTypedArray(), "Zeros")
+        }
     }
 
     val period: Double

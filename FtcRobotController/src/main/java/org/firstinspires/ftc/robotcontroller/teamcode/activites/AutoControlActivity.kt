@@ -33,18 +33,22 @@ class AutoControlActivity : Activity() {
         private val touchTolerance = 4f
 
         init {
-            circlePaint.isAntiAlias = true
-            circlePaint.color = Color.BLUE
-            circlePaint.style = Paint.Style.STROKE
-            circlePaint.strokeJoin = Paint.Join.MITER
-            circlePaint.strokeWidth = 4f
-            mPaint.isAntiAlias = true
-            mPaint.isDither = true
-            mPaint.color = Color.BLACK
-            mPaint.style = Paint.Style.STROKE
-            mPaint.strokeJoin = Paint.Join.ROUND
-            mPaint.strokeCap = Paint.Cap.ROUND
-            mPaint.strokeWidth = 12f
+            with(circlePaint) {
+                isAntiAlias = true
+                color = Color.BLUE
+                style = Paint.Style.STROKE
+                strokeJoin = Paint.Join.MITER
+                strokeWidth = 4f
+            }
+            with(mPaint) {
+                isAntiAlias = true
+                isDither = true
+                color = Color.BLACK
+                style = Paint.Style.STROKE
+                strokeJoin = Paint.Join.ROUND
+                strokeCap = Paint.Cap.ROUND
+                strokeWidth = 12f
+            }
         }
 
         override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -55,15 +59,17 @@ class AutoControlActivity : Activity() {
 
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
-            canvas.drawBitmap(mBitmap, 0f, 0f, mBitmapPaint)
-            canvas.drawPath(mPath, mPaint)
-            canvas.drawPath(circlePath, circlePaint)
+            with(canvas) {
+                drawBitmap(mBitmap, 0f, 0f, mBitmapPaint)
+                drawPath(mPath, mPaint)
+                drawPath(circlePath, circlePaint)
+            }
         }
 
         private fun touchStart(x: Float, y: Float) {
             mPath.reset()
             mPath.moveTo(x, y)
-            if(mX == -1f || mY == -1f) {
+            if (mX == -1f || mY == -1f) {
                 mX = x
                 mY = y
             }

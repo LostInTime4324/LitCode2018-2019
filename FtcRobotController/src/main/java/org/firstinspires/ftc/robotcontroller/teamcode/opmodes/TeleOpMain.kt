@@ -31,6 +31,10 @@ class TeleOpMain : OpMode() {
         omniStickDrive()
     }
 
+    fun mecanumDrive() {
+
+    }
+
     fun omniStickDrive() {
         if (abs(leftX) > abs(leftY)) {
             nav.drive(Navigation.Direction.Forward, leftX)
