@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -104,14 +103,6 @@ class PID(var Kp: Double, var Kd: Double, var Ki: Double, val controller: (power
 
     fun addGraphs() {
         createGraphs()
-        with(GraphActivity) {
-            graphs += GraphActivity.Graph(errorPoints.toTypedArray(), "Error Points")
-            graphs += GraphActivity.Graph(derivativePoints.toTypedArray(), "Derivative Points")
-            graphs += GraphActivity.Graph(integralPoints.toTypedArray(), "Integral Points")
-            graphs += GraphActivity.Graph(aveErrorPoints, "Averaged Error Points")
-            graphs += GraphActivity.Graph(aveDerPoints, "Averaged Derivative Points")
-            graphs += GraphActivity.Graph(zeros.toTypedArray(), "Zeros")
-        }
     }
 
     val period: Double
