@@ -96,6 +96,7 @@ import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogServic
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity;
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.VariableControlActivity;
 import org.firstinspires.ftc.robotcore.internal.hardware.DragonboardLynxDragonboardIsPresentPin;
 import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManager;
@@ -319,7 +320,7 @@ public class FtcRobotControllerActivity extends Activity {
         findViewById(R.id.graphInitButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(context, GraphActivity.class));
             }
         });
 
