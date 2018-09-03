@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.robotcontroller.teamcode.activites
 
+
 import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_graph.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Vector
 
 class GraphActivity : Activity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)

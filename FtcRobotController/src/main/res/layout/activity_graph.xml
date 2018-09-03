@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity">
+    tools:context="org.firstinspires.ftc.robotcontroller.teamcode.GraphActivity">
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graphView"
@@ -26,7 +26,7 @@
             android:id="@+id/graphButtonsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical"/>
     </ScrollView>
 
     <Button
