@@ -31,9 +31,7 @@ class TeleOpMain : OpMode() {
         omniStickDrive()
     }
 
-    fun mecanumDrive() {
 
-    }
 
     fun omniStickDrive() {
         if (abs(leftX) > abs(leftY)) {

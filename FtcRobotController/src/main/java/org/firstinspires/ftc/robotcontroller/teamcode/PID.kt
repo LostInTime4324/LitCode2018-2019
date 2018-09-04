@@ -1,65 +1,30 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
 import com.qualcomm.robotcore.util.ElapsedTime
-import kotlin.math.abs
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.Graph
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphSeries
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphType
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sign
 
 /**
  * Created by walker on 2/22/18.
  */
-class PID(var Kp: Double, var Kd: Double, var Ki: Double, val controller: (power: Double, setPoint: Double) -> Double) {
-
-    fun calibrate(testSetPoint: Double) {
-        var setPoint = testSetPoint
-        val timeout = 3.0
-        while (true) {
-            val period = gotoSetPoint(setPoint, timeout)
-            setPoint *= -1
-            if (period == 0.0) {
-                Kp *= 2
-            } else {
-                val Tu = period
-                Kp = 0.6 * Kp
-                Ki = 1.2 * Kp / Tu
-                Kd = 3.0 / 40.0 * Kp * Tu
-                break
-            }
-        }
-    }
-
+class PID(var Kp: Double, var Kd: Double, var Ki: Double) {
     val numberOfPoints get() = errorPoints.size
 
     val timer = ElapsedTime()
     val errorPoints = ArrayList<Vector>()
     val derivativePoints = ArrayList<Vector>()
     val integralPoints = ArrayList<Vector>()
+    val powerPoints = ArrayList<Vector>()
     val zeros = ArrayList<Vector>()
     lateinit var aveErrorPoints: Array<Vector>
     lateinit var aveDerPoints: Array<Vector>
-    lateinit var absErrorPoints: Array<Vector>
+    lateinit var aveIntPoints: Array<Vector>
 
     val timeInterval = 0.05
-    var prevError = 0.0
-    var prevTime = 0.0
-    var error = 0.0
-    var time = 0.0
-    val dt get() = time - prevTime
-    val de get() = error - prevError
-    val errorDerivative get() = de / dt
-    var errorIntegral = 0.0
-
-    private fun integrate() {
-        errorIntegral += if (prevError != 0.0) (error + prevError) / 2.0 * dt else error * dt
-    }
-
-    fun addPoints() {
-        val t = time
-        errorPoints.add(Vector(t, error))
-        derivativePoints.add(Vector(t, errorDerivative))
-        integralPoints.add(Vector(t, errorIntegral))
-    }
 
     fun averagedArray(array: Array<Vector>, num: Int): Array<Vector> {
         return array.mapIndexed { index, vector ->
@@ -69,91 +34,82 @@ class PID(var Kp: Double, var Kd: Double, var Ki: Double, val controller: (power
     }
 
     fun createGraphs() {
-        absErrorPoints = Array(numberOfPoints) {
-            Vector(aveErrorPoints[it].x, abs(aveErrorPoints[it].y))
-        }
-
         aveErrorPoints = averagedArray(errorPoints.toTypedArray(), 1)
 
         aveDerPoints = Array(numberOfPoints) {
-            if (it == 0) Vector(aveErrorPoints[it].x, (aveErrorPoints[it].y - aveErrorPoints[it + 1].y) / (aveErrorPoints[it].x - aveErrorPoints[it + 1].x))
-            else if (it == numberOfPoints - 1) Vector(aveErrorPoints[it].x, (aveErrorPoints[it - 1].y - aveErrorPoints[it].y) / (aveErrorPoints[it - 1].x - aveErrorPoints[it].x))
-            else Vector(aveErrorPoints[it].x, (aveErrorPoints[it - 1].y - aveErrorPoints[it + 1].y) / (aveErrorPoints[it - 1].x - aveErrorPoints[it + 1].x))
+            val x = aveErrorPoints[it].x
+            if (it == 0) return@Array Vector(x, 0.0)
+            val de = aveErrorPoints[it].y - aveErrorPoints[it - 1].y
+            val dt = aveErrorPoints[it].x - aveErrorPoints[it - 1].x
+            val y = de / dt
+            Vector(x, y)
         }
 
-        var max_de = 0.0
-
-        for (i in 1 until numberOfPoints) {
-            max_de = max(max_de, abs(aveErrorPoints[i].y - aveErrorPoints[i - 1].y))
+        var intSum = 0.0
+        aveIntPoints = Array(numberOfPoints) {
+            if (it == 0) return@Array Vector(aveErrorPoints[it].x, 0.0)
+            val t = aveErrorPoints[it].x
+            val pt = aveDerPoints[it - 1].x
+            val dt = t - pt
+            val e = aveErrorPoints[it].y
+            intSum += e * dt
+            Vector(t, intSum)
         }
 
-        var derSign = 0.0
-
-        absErrorPoints.forEachIndexed { index, vector ->
-            if (index != absErrorPoints.size - 1) {
-                if (vector.y <= max_de && (derSign == 0.0 || derSign == aveDerPoints[index].y.sign)) {
-                    zeros.add(vector)
-                    if (derSign == 0.0) {
-                        derSign = -aveDerPoints[index].y.sign
-                    } else {
-                        derSign *= -1
-                    }
-                }
-            }
-        }
+        GraphActivity.graphs +=
+                Graph("Points",
+                        GraphSeries(errorPoints, "Error Points", GraphType.LineGraph),
+                        GraphSeries(derivativePoints, "Derivative Points", GraphType.LineGraph),
+                        GraphSeries(integralPoints, "Integral Points", GraphType.LineGraph),
+                                GraphSeries(powerPoints, "Power Points", GraphType.LineGraph)
+                )
+        GraphActivity.graphs +=
+                Graph("Averaged Points}",
+                        GraphSeries(aveErrorPoints, "Averaged Error Points", GraphType.LineGraph),
+                        GraphSeries(aveDerPoints, "Derivative Points of Averaged Error Points", GraphType.LineGraph),
+                        GraphSeries(aveIntPoints, "Integral Points of Averaged Error Points", GraphType.LineGraph),
+                        GraphSeries(zeros, "Zeros", GraphType.PointGraph)
+                )
     }
 
-    fun addGraphs() {
-        createGraphs()
-    }
-
+    var prevError = 0.0
+    var prevTime = 0.0
+    var error = 0.0
+    var time = 0.0
+    var errorIntegral = 0.0
     fun reset() {
-        timer.reset()
-        time = 0.0
         errorPoints.clear()
         derivativePoints.clear()
         integralPoints.clear()
-        errorIntegral = 0.0
-        prevTime = 0.0
         prevError = 0.0
+        prevTime = 0.0
+        error = 0.0
+        time = 0.0
+        errorIntegral = 0.0
+        timer.reset()
     }
 
-    fun gotoSetPoint(setPoint: Double, timeout: Double): Double {
-        reset()
-        do {
-            wait(timeInterval)
-            time = timer.time()
-            integrate()
-            addPoints()
-            val power = error * Kp + errorDerivative * Kd + errorIntegral * Ki
-            error = controller(power, setPoint)
-            prevTime = time
-            prevError = error
-        } while (abs(power) > 0.15 && time < timeout)
+    fun getPower(error: Double): Double {
+        time = timer.time()
+        val dt = time - prevTime
+        val de = error - prevError
+        val errorDerivative = de / dt
+        errorIntegral += if (prevError != 0.0) (error + prevError) / 2.0 * dt else error * dt
+        val power = error * Kp + errorDerivative * Kd + errorIntegral * Ki
+        errorPoints.add(Vector(time, error))
+        derivativePoints.add(Vector(time, errorDerivative))
+        integralPoints.add(Vector(time, errorIntegral))
+        powerPoints.add(Vector(time, power))
 
-        //If it didn't timeout then the power was too low so the period should be 0
-        if(time < timeout) {
-            return 0.0
-        }
-
-        createGraphs()
-
-        val zeroDistances = Array(zeros.size - 1) {
-            zeros[it + 1].x - zeros[it].x
-        }
-
-        val halfPeriod = zeroDistances.average()
-
-        //If the distances between the zeros isn't approximately the same then the period should be zero
-        zeroDistances.forEach {
-            if (halfPeriod * 1.25 < it || halfPeriod * 0.75 > it) return 0.0
-        }
-
-        return halfPeriod * 2
+        prevTime = time
+        prevError = error
+        return power
     }
 
-    fun wait(ys: Double) {
-        val startTime = time
-        while (time - startTime < ys);
+    fun isStillMoving() = powerPoints.subList(numberOfPoints - 10, numberOfPoints).any {it.y >= 0.15}
+
+    fun wait(seconds: Double) {
+        val startTime = timer.time()
+        while (timer.time() - startTime < seconds);
     }
 }
