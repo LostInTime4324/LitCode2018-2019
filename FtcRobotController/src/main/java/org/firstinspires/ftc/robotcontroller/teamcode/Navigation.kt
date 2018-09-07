@@ -10,8 +10,6 @@ import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.BACK_RIGHT_M
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_LEFT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_RIGHT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.IMU
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.X_DISTANCE_SENSOR
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.Y_DISTANCE_SENSOR
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -41,8 +39,8 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val turnPID = PID(vars[Numbers.Turn_Kp], vars[Numbers.Turn_Kd], vars[Numbers.Turn_Ki])
     val drivePID = PID(vars[Numbers.Drive_Kp], vars[Numbers.Drive_Kd], vars[Numbers.Drive_Ki])
 
-    val xDistanceSensor: DistanceSensor = hardwareMap[X_DISTANCE_SENSOR] as DistanceSensor
-    val yDistanceSensor: DistanceSensor = hardwareMap[Y_DISTANCE_SENSOR] as DistanceSensor
+    lateinit var xDistanceSensor: DistanceSensor// = hardwareMap[X_DISTANCE_SENSOR] as DistanceSensor
+    lateinit var yDistanceSensor: DistanceSensor// = hardwareMap[Y_DISTANCE_SENSOR] as DistanceSensor
 
     fun getXPos() = xDistanceSensor.getDistance(DistanceUnit.INCH)
     fun getYPos() = yDistanceSensor.getDistance(DistanceUnit.INCH)
@@ -85,29 +83,27 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         } while (drivePID.isStillMoving())
     }
 
-    fun drive(direction: Direction, power: Double) {
-        resetPower()
-        when (direction) {
-            Direction.Forward -> addStraightPower(Orientation.Vertical, power)
-            Direction.Backward -> addStraightPower(Orientation.Vertical, -power)
-            Direction.Right -> addStraightPower(Orientation.Horizontal, power)
-            Direction.Left -> addStraightPower(Orientation.Horizontal, -power)
+    fun turn(power: Double) {
+        setPower(power, power, power, power)
+    }
+
+    fun drive(orientation: Orientation, power: Double) {
+        when (orientation) {
+            Orientation.Vertical -> setPower(power, power, -power, -power)
+            Orientation.Horizontal -> setPower(power, -power, power, -power)
         }
     }
 
-    fun turn(power: Double) {
-        resetPower()
-        addTurnPower(power)
+    fun addTurnPower(power: Double) {
+        addPower(power, power, power, power)
     }
 
-    fun addTurnPower(power: Double) {
-        addPower(power, power, -power, -power)
-    }
+
 
     fun addStraightPower(orientation: Orientation, power: Double) {
         when (orientation) {
-            Orientation.Vertical -> addPower(power, power, power, power)
-            Orientation.Horizontal -> addPower(power, -power, power, -power)
+            Orientation.Horizontal -> addPower(power, power, -power, -power)
+            Orientation.Vertical -> addPower(power, -power, power, -power)
         }
     }
 
@@ -146,7 +142,6 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
 
     fun wait(seconds: Double) {
         val timer = ElapsedTime()
-        val startTime = timer.time()
-        while (timer.time() - startTime < seconds);
+        while (timer.time() < seconds);
     }
 }

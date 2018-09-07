@@ -14,9 +14,6 @@ class TeleOpMain : OpMode() {
     val rightX: Double get() = gamepad1.right_stick_x.toDouble()
     val rightY: Double get() = gamepad1.right_stick_y.toDouble()
 
-    var x = true
-    var y = false
-
     private val nav by lazy {
         Navigation(hardwareMap, telemetry)
     }
@@ -31,14 +28,14 @@ class TeleOpMain : OpMode() {
         omniStickDrive()
     }
 
-
-
     fun omniStickDrive() {
-        if (abs(leftX) > abs(leftY)) {
-            nav.drive(Navigation.Direction.Forward, leftX)
-        } else {
-            nav.drive(Navigation.Direction.Right, leftY)
+        if (abs(leftX) > abs(leftY) && abs(leftX) >= 0.1) {
+            nav.drive(Navigation.Orientation.Horizontal, leftX)
+        } else if (abs(leftY) >= 0.1) {
+            nav.drive(Navigation.Orientation.Vertical, leftY)
         }
-        nav.turn(rightX)
+
+        if (rightX >= 0.1)
+            nav.turn(rightX)
     }
 }

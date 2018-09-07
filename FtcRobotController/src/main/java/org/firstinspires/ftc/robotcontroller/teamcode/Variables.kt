@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcontroller.teamcode.activites.VariableControlA
 import java.math.BigDecimal
 import java.math.MathContext
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 object Variables {
@@ -37,6 +38,7 @@ object Variables {
         values[name] = Variable(number.toDouble(), name)
     }
 
+    val AutoPoints = ArrayList<Vector>()
 }
 
 class Variable(num: Double, val name: String) {

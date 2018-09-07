@@ -9,8 +9,7 @@ import kotlin.math.sqrt
  * Created by walker on 3/14/18.
  */
 class Vector(var x: Double, var y: Double) {
-    constructor(theta: Double) : this(cos(theta), sin(theta))
-    constructor() : this(0.0, 0.0)
+    constructor(x: Float, y: Float) : this(x.toDouble(), y.toDouble())
 
     val mag = sqrt(x * x + y * y)
     val norm = this / this.mag

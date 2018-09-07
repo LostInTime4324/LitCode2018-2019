@@ -6,6 +6,8 @@ import android.graphics.*
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables
+import org.firstinspires.ftc.robotcontroller.teamcode.Vector
 
 
 class AutoControlActivity : Activity() {
@@ -94,6 +96,7 @@ class AutoControlActivity : Activity() {
             mPath.reset()
             mX = x
             mY = y
+            Variables.AutoPoints += Vector(x, y)
         }
 
         override fun onTouchEvent(event: MotionEvent): Boolean {
