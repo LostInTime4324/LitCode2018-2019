@@ -29,13 +29,14 @@ class TeleOpMain : OpMode() {
     }
 
     fun omniStickDrive() {
-        if (abs(leftX) > abs(leftY) && abs(leftX) >= 0.1) {
-            nav.drive(Navigation.Orientation.Horizontal, leftX)
-        } else if (abs(leftY) >= 0.1) {
-            nav.drive(Navigation.Orientation.Vertical, leftY)
+        if (abs(leftX) >= 0.1 || abs(leftY) >= 0.1) {
+            if (abs(leftX) > abs(leftY)) {
+                nav.drive(Navigation.Orientation.Horizontal, leftX)
+            } else {
+                nav.drive(Navigation.Orientation.Vertical, leftY)
+            }
+        } else {
+            nav.resetPower()
         }
-
-        if (rightX >= 0.1)
-            nav.turn(rightX)
     }
 }
