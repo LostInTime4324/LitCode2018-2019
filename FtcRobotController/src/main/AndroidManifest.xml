@@ -34,6 +34,15 @@
         android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
         android:resource="@xml/device_filter" />
     </activity>
+    <activity
+        android:name="org.firstinspires.ftc.robotcontroller.teamcode.activites.VariableControlActivity"
+        android:label="VariableControl"/>
+    <activity
+        android:name="org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity"
+        android:label="GraphActivity" />
+    <activity
+        android:name="org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity"
+        android:label="AutoControlActivity"/>
 
     <!-- The robot controller service in which most of the robot functionality is managed -->
     <service
