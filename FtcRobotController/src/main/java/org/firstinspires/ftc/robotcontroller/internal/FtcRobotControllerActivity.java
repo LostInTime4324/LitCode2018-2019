@@ -132,7 +132,7 @@ public class FtcRobotControllerActivity extends Activity
   private static final int NUM_GAMEPADS = 2;
 
   protected WifiManager.WifiLock wifiLock;
-  protected RobotConfigFileManager cfgFileMgr;
+    protected RobotConfigFileManager cfgFileMgr;
 
   protected ProgrammingWebHandlers programmingWebHandlers;
   protected ProgrammingModeController programmingModeController;
