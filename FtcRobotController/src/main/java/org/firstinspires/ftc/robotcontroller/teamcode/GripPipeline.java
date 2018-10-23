@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.robotcontroller.teamcode;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.HashMap;
 
 import org.opencv.core.*;
@@ -40,14 +40,14 @@ public class GripPipeline {
         // Step Blur0:
         Mat blurInput = source0;
         BlurType blurType = BlurType.get("Median Filter");
-        double blurRadius = 47.74774774774775;
+        double blurRadius = 100.0;
         blur(blurInput, blurType, blurRadius, blurOutput);
 
         // Step HSV_Threshold0:
         Mat hsvThresholdInput = blurOutput;
-        double[] hsvThresholdHue = {3.237410071942446, 64.84848484848486};
-        double[] hsvThresholdSaturation = {112.36510791366906, 255.0};
-        double[] hsvThresholdValue = {43.5701438848921, 255.0};
+        double[] hsvThresholdHue = {0.0, 52.525597269624576};
+        double[] hsvThresholdSaturation = {178.86690647482015, 255.0};
+        double[] hsvThresholdValue = {110.07194244604317, 255.0};
         hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
         // Step Find_Blobs0:
@@ -156,7 +156,7 @@ public class GripPipeline {
      * @param hue The min and max hue
      * @param sat The min and max saturation
      * @param val The min and max value
-     * @param out The image in which to store the output.
+     * @param output The image in which to store the output.
      */
     private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
                               Mat out) {
@@ -224,5 +224,8 @@ public class GripPipeline {
 
         blobDet.detect(input, blobList);
     }
-}
 
+
+
+
+}

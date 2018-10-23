@@ -29,7 +29,7 @@ object Variables {
     }
 
     operator fun get(variable: Numbers): Double {
-        return values[variable.name]!!.num
+        return values[variable.name]?.num ?: 0.0
     }
 
     fun put(name: String) {
@@ -47,9 +47,9 @@ class Variable(num: Double, val name: String) {
             if (value != num) {
                 val text = value.toString()
                 val number: Double
-                if(text.indexOf(".") == text.length - 2) {
+                if (text.indexOf(".") == text.length - 2) {
                     number = text.replace(".0", "").toDouble()
-                } else if(value < 1) {
+                } else if (value < 1) {
                     number = BigDecimal(value).round(MathContext(3)).toDouble()
                 } else {
                     number = (Math.round(value * 100.0) / 100.0)
@@ -71,8 +71,8 @@ class Variable(num: Double, val name: String) {
 
     val range: Range
         get() {
-                if (name.contains("ANGLE")) return Range(rangeNum - 10, rangeNum + 10)
-                if (name.contains("DISTANCE")) return Range(rangeNum - 15, rangeNum + 15)
+            if (name.contains("ANGLE")) return Range(rangeNum - 10, rangeNum + 10)
+            if (name.contains("DISTANCE")) return Range(rangeNum - 15, rangeNum + 15)
             return Range(0.0, rangeNum * 2)
         }
 
