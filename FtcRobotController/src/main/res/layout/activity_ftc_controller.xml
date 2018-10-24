@@ -170,7 +170,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:text="" />
 
     <Button
-        android:id="@+id/variableConfigurationInitButton"
+        android:id="@+id/variableControlInitButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_above="@+id/textGamepad1"

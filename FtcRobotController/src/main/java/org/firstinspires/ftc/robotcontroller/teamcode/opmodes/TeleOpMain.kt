@@ -18,6 +18,8 @@ class TeleOpMain : OpMode() {
         Navigation(hardwareMap, telemetry)
     }
 
+    private val vars = Variables
+
     override fun init() {
 
     }
@@ -38,18 +40,17 @@ class TeleOpMain : OpMode() {
         }
     }
 
-    fun omniStickDrive() {
-        if (abs(leftX) >= 0.1 || abs(leftY) >= 0.1) {
-            if (abs(leftX) > abs(leftY)) {
-                nav.drive(Navigation.Orientation.Horizontal, leftX)
-            } else {
-                nav.drive(Navigation.Orientation.Vertical, leftY)
-            }
+        //Turn right motor only
+        if (abs(rightY) >= 0.1 && abs(leftY) <= 0.1) {
+            nav.setPower(-rightY, -rightY, rightY, rightY)
+        } else {
+            nav.resetPower()
         }
-        if (abs(rightX) >= 0.1) {
-            nav.turn(rightX)
-        }
-        if (abs(leftX) <= 0.1 && abs(leftY) <= 0.1 && abs(rightX) <= 0.1) {
+
+        //Go straight or back
+        if (abs(leftY) >= 0.1 && abs(rightY) >= 0.1) {
+            nav.setPower(leftY, leftY, rightY, rightY)
+        } else {
             nav.resetPower()
         }
     }

@@ -12,6 +12,7 @@ import com.qualcomm.ftcrobotcontroller.R
 import kotlinx.android.synthetic.main.activity_graph.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Vector
 import org.firstinspires.ftc.robotcontroller.teamcode.createSpinner
+import kotlin.math.sin
 
 class GraphActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,16 @@ class GraphActivity : Activity() {
 
     companion object {
         val graphs = ArrayList<Graph>()
+        init {
+            val points1 = Array(20) {
+                Vector(it.toDouble(), sin(it.toDouble()))
+            }
+            graphs.add(Graph("Test", GraphSeries(points1, "Series", GraphType.PointGraph)))
+            val points2 = Array(20) {
+                Vector(it.toDouble(), sin(it.toDouble()))
+            }
+            graphs.add(Graph("Test", GraphSeries(points1, "Series", GraphType.PointGraph)))
+        }
     }
 }
 
