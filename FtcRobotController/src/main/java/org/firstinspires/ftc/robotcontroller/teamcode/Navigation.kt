@@ -13,21 +13,38 @@ import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.IMU
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.X_DISTANCE_SENSOR
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
+import kotlin.math.abs
 
 class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val vars = Variables
+
     val frontLeftMotor: DcMotor by lazy {
         hardwareMap[FRONT_LEFT_MOTOR] as DcMotor
     }
+
+//    val frontLeftPID = PID("Front Left", )
+
     val backLeftMotor by lazy {
         hardwareMap[BACK_LEFT_MOTOR] as DcMotor
     }
+
+//    val backLeftPID = PID("Back Left", )
+
     val frontRightMotor by lazy {
         hardwareMap[FRONT_RIGHT_MOTOR] as DcMotor
     }
+
+//    val frontLeftPID = PID("Front Left", )
+
     val backRightMotor by lazy {
         hardwareMap[BACK_RIGHT_MOTOR] as DcMotor
     }
+
+//    val backLeftPID = PID("Back Left", )
+
+    val motors by lazy { arrayOf(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor) }
+
+    val averagePosition: Double get() = motors.sumBy { it.currentPosition } / (COUNTS_PER_INCH * motors.size)
 
     val imu: BNO055IMU by lazy {
         val params = BNO055IMU.Parameters()
@@ -44,58 +61,81 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     }
 
 
-    val turnPID = PID(vars[Numbers.Turn_Kp], vars[Numbers.Turn_Kd], vars[Numbers.Turn_Ki])
-    val drivePID = PID(vars[Numbers.Drive_Kp], vars[Numbers.Drive_Kd], vars[Numbers.Drive_Ki])
+    val turnPID = PID("Turn", vars[VariableNames.Turn_Kp], vars[VariableNames.Turn_Kd], vars[VariableNames.Turn_Ki])
+    val turnCorrectionPID = PID("Turn Correction", vars[VariableNames.Turn_Correction_Kp], vars[VariableNames.Turn_Correction_Kd], vars[VariableNames.Turn_Correction_Ki])
+    val drivePID = PID("Drive", vars[VariableNames.Drive_Kp], vars[VariableNames.Drive_Kd], vars[VariableNames.Drive_Ki])
     val distanceSensor by lazy { hardwareMap[X_DISTANCE_SENSOR] as DistanceSensor }
+
+    val COUNTS_PER_MOTOR_REV = 1120.0    // eg: TETRIX Motor Encoder
+    val DRIVE_GEAR_REDUCTION = 1.0     // This is < 1.0 if geared UP
+    val WHEEL_DIAMETER_INCHES = 4.0     // For figuring circumference
+    val COUNTS_PER_INCH = COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION / (WHEEL_DIAMETER_INCHES * 3.1415)
+    val DRIVE_SPEED = 1
+    val TURN_SPEED = 1
+
 
     fun getHeading() = imu.getAngularOrientation().firstAngle.toDouble()
 
     fun turnByGyro(angle: Double) {
-        val startHeading = getHeading()
-
+        val target = angle - getHeading()
         do {
-            val target = angle - startHeading
-            val err =  target - getHeading()
+            val err = target - getHeading()
             val power = turnPID.getPower(err)
             telemetry.addData("Error", err)
             telemetry.addData("Target", target)
             telemetry.addData("Power", power)
-            turn(power)
-        } while(turnPID.isStillMoving())
+            turnByEncoder(power)
+        } while (turnPID.isMoving())
         turnPID.createGraphs()
     }
 
-    fun turn(power: Double) {
-        setPower(power, power, power, power)
+    fun turnByEncoder(power: Double) {
+
     }
 
-    fun drive(power: Double) {
-           setPower(power, power, -power, -power)
+    fun driveByPID(inches: Double) {
+        val startHeading = getHeading()
+        do {
+            val correctionPower = turnCorrectionPID.getPower(startHeading - getHeading())
+            val drivePower = drivePID.getPower(averagePosition - inches)
+            setPower(drivePower + correctionPower, drivePower - correctionPower)
+        } while (drivePID.isMoving())
+        turnCorrectionPID.createGraphs()
+        drivePID.createGraphs()
     }
 
-    fun addTurnPower(power: Double) {
-        addPower(power, power, power, power)
+    fun driveByEncoder(speed: Double, inches: Double) {
+
+        motors.forEach {
+            it.targetPosition = it.currentPosition + (inches * COUNTS_PER_INCH).toInt()
+            it.mode = DcMotor.RunMode.RUN_USING_ENCODER
+            it.power = abs(speed)
+        }
+
+        while (motors.all { it.isBusy() }) {
+
+            // Display it for the driver.
+            telemetry.addData("Path1", "Running to ${inches}")
+            motors.forEach {
+                telemetry.addData("Path2", "Running at ${it.currentPosition}")
+            }
+            telemetry.update()
+
+        }
+        resetPower()
     }
 
-    fun addPower(frontLeft: Double, backLeft: Double, frontRight: Double, backRight: Double) {
-        frontLeftMotor.power += frontLeft
-        backLeftMotor.power += backLeft
-        frontRightMotor.power += frontRight
-        backRightMotor.power += backRight
-    }
-
-    fun setPower(frontLeft: Double, backLeft: Double, frontRight: Double, backRight: Double) {
-        frontLeftMotor.power = frontLeft
-        backLeftMotor.power = backLeft
-        frontRightMotor.power = frontRight
-        backRightMotor.power = backRight
+    fun setPower(left: Double, right: Double) {
+        frontLeftMotor.power = left
+        backLeftMotor.power = left
+        frontRightMotor.power = -right
+        backRightMotor.power = -right
     }
 
     fun resetPower() {
-        frontLeftMotor.power = 0.0
-        backLeftMotor.power = 0.0
-        frontRightMotor.power = 0.0
-        backRightMotor.power = 0.0
+        motors.forEach {
+            it.power = 0.0
+        }
     }
 
     enum class Direction {

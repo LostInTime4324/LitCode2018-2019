@@ -8,10 +8,7 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.WindowManager
-import android.widget.EditText
-import android.widget.GridLayout
-import android.widget.SeekBar
-import android.widget.TextView
+import android.widget.*
 import com.qualcomm.ftcrobotcontroller.R
 import kotlinx.android.synthetic.main.activity_variable_control.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Range
@@ -27,9 +24,7 @@ class VariableControlActivity : Activity() {
     }
 
     var selectedVariable: Variable? = null
-
     var selectedVariableRange: Range? = null
-
     var savedVariableValue: Double? = null
 
     companion object {
@@ -52,14 +47,8 @@ class VariableControlActivity : Activity() {
                     }
                 }
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+            override fun onStopTrackingTouch(seekBar: SeekBar?) { }
         })
 
         scrollBarLeftButton.setOnClickListener {
@@ -92,16 +81,16 @@ class VariableControlActivity : Activity() {
             updatePreferences()
         }
 
-        Variables.values.asIterable().forEachIndexed { index, variableEntry ->
-            val field = NumberField(variableEntry.key, variableEntry.value)
+        Variables.values.asIterable().forEachIndexed { index, variable ->
+            val field = NumberField(variable.key, variable.value)
             var params = GridLayout.LayoutParams(GridLayout.spec(index), GridLayout.spec(0)).also { it.marginStart = 50 }
-            field.textView.layoutParams = params
+            field.nameText.layoutParams = params
             params = GridLayout.LayoutParams(GridLayout.spec(index), GridLayout.spec(1)).also { it.marginStart = 50 }
-            field.editText.layoutParams = params
-            variableEntry.value.editText = field.editText
-            variableEntry.value.scrollBar = scrollBar
-            variableControlLayout.addView(field.textView)
-            variableControlLayout.addView(field.editText)
+            field.numberText.layoutParams = params
+            variable.value.scrollBar = scrollBar
+            val layout = LinearLayout(this)
+            variableControlLayout.addView(field.nameText)
+            variableControlLayout.addView(field.numberText)
         }
     }
 
@@ -116,15 +105,13 @@ class VariableControlActivity : Activity() {
         }
     }
 
-    fun getContext(): Context {
-        return this
-    }
+    val context = this
 
     inner class NumberField(val name: String, val variable: Variable) {
-        val editText = EditText(getContext()).also {
-            it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            it.setText(variable.num.toString())
-            it.setOnFocusChangeListener { view, hasFocus ->
+        val numberText = EditText(context).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText(variable.num.toString())
+            setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
                     scrollBar.progress = 50
                     selectedVariable = variable
@@ -132,15 +119,12 @@ class VariableControlActivity : Activity() {
                     savedVariableValue = variable.num
                 }
             }
-            it.addTextChangedListener(object : TextWatcher {
+            addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(number: Editable?) {
                     try {
-                        val num = number.toString().toDouble()
-                        if (variable.num != num) {
-                            variable.num = num
-                        }
+                        variable.num = number.toString().toDouble()
                     } catch (e: Exception) {
 
                     }
@@ -148,8 +132,8 @@ class VariableControlActivity : Activity() {
             })
         }
 
-        val textView = TextView(getContext()).also {
-            it.text = name.replace("_", " ")
+        val nameText = TextView(context).apply {
+            text = name.replace("_", " ")
         }
     }
 }

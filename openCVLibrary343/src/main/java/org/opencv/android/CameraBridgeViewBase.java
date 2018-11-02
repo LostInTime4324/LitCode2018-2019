@@ -35,8 +35,8 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     private static final int STARTED = 1;
 
     private int mState = STOPPED;
-    private Bitmap mCacheBitmap;
-    private CvCameraViewListener2 mListener;
+    public Bitmap mCacheBitmap;
+    public CvCameraViewListener2 mListener;
     private boolean mSurfaceExist;
     private final Object mSyncObject = new Object();
 

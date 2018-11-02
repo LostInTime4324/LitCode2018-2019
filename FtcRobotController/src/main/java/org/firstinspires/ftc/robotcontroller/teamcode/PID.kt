@@ -11,7 +11,7 @@ import kotlin.math.min
 /**
  * Created by walker on 2/22/18.
  */
-class PID(var Kp: Double, var Kd: Double, var Ki: Double) {
+class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
     val numberOfPoints get() = errorPoints.size
 
     val timer = ElapsedTime()
@@ -57,14 +57,14 @@ class PID(var Kp: Double, var Kd: Double, var Ki: Double) {
         }
 
         GraphActivity.graphs +=
-                Graph("Points",
+                Graph("$name: Points",
                         GraphSeries(errorPoints, "Error Points", GraphType.LineGraph),
                         GraphSeries(derivativePoints, "Derivative Points", GraphType.LineGraph),
                         GraphSeries(integralPoints, "Integral Points", GraphType.LineGraph),
                                 GraphSeries(powerPoints, "Power Points", GraphType.LineGraph)
                 )
         GraphActivity.graphs +=
-                Graph("Averaged Points}",
+                Graph("$name: Averaged Points}",
                         GraphSeries(aveErrorPoints, "Averaged Error Points", GraphType.LineGraph),
                         GraphSeries(aveDerPoints, "Derivative Points of Averaged Error Points", GraphType.LineGraph),
                         GraphSeries(aveIntPoints, "Integral Points of Averaged Error Points", GraphType.LineGraph),
@@ -106,7 +106,7 @@ class PID(var Kp: Double, var Kd: Double, var Ki: Double) {
         return power
     }
 
-    fun isStillMoving() = powerPoints.subList(numberOfPoints - 10, numberOfPoints).any {it.y >= 0.15}
+    fun isMoving() = powerPoints.subList(numberOfPoints - 10, numberOfPoints).any {it.y >= 0.15}
 
     fun wait(seconds: Double) {
         val startTime = timer.time()

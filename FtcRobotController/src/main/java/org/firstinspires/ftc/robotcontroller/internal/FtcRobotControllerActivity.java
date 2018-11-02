@@ -58,12 +58,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeControllerImpl;
@@ -103,7 +103,6 @@ import com.qualcomm.robotcore.wifi.NetworkType;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
-import org.firstinspires.ftc.robotcontroller.teamcode.GripPipeline;
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity;
@@ -149,13 +148,14 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
     private static final String TAG = "OCVSample::Activity";
 
     static {
-        if(OpenCVLoader.initDebug()) {
+        if (OpenCVLoader.initDebug()) {
             Log.i(TAG, "Load success");
         } else {
             Log.i(TAG, "Load failed");
         }
-       // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
+
 
     // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -169,7 +169,9 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
     Mat mRgbaF;
     Mat mRgbaT;
 
-    GripPipeline pipeLine = new GripPipeline();
+    static public SamplingOrderDetector detector = new SamplingOrderDetector();
+
+    static public boolean autoStarted = false;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -189,7 +191,6 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
     };
 
     public void onCameraViewStarted(int width, int height) {
-
         mRgba = new Mat(height, width, CvType.CV_8UC4);
         mRgbaF = new Mat(height, width, CvType.CV_8UC4);
         mRgbaT = new Mat(width, width, CvType.CV_8UC4);
@@ -198,20 +199,21 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
     public void onCameraViewStopped() {
         mRgba.release();
     }
+
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
         // TODO Auto-generated method stub
         mRgba = inputFrame.rgba();
         // Rotate mRgba 90 degrees
         Core.transpose(mRgba, mRgbaT);
-        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-        Core.flip(mRgbaF, mRgba, 1 );
+        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0, 0, 0);
+        Core.flip(mRgbaF, mRgba, 1);
 
-        pipeLine.process(mRgba);
-
-        return pipeLine.hsvThresholdOutput(); // This function must return
+        if (autoStarted)
+            return detector.process(mRgba);
+        else
+            return mRgba;
     }
-
 
 
     public String getTag() {

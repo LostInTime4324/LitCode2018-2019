@@ -3,11 +3,8 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.widget.EditText
 import android.widget.SeekBar
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.VariableControlActivity.Companion.scrollBarRange
-import java.math.BigDecimal
-import java.math.MathContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -23,18 +20,18 @@ object Variables {
     @JvmStatic
     fun init(context: Context) {
         preferences = context.getSharedPreferences(VARIABLE_PREFRENCES_TAG, MODE_PRIVATE)
-        Numbers.values().forEach {
+        VariableNames.values().forEach {
             put(it.name)
         }
     }
 
-    operator fun get(variable: Numbers): Double {
+    @JvmStatic
+    operator fun get(variable: VariableNames): Double {
         return values[variable.name]?.num ?: 0.0
     }
 
     fun put(name: String) {
-        var number = preferences.getString(name, "0.0")
-        if (number == "") number = "0.0"
+        val number = preferences.getString(name, "0.0")
         values[name] = Variable(number.toDouble(), name)
     }
 
@@ -44,28 +41,11 @@ object Variables {
 class Variable(num: Double, val name: String) {
     var num = num
         set(value) {
-            if (value != num) {
-                val text = value.toString()
-                val number: Double
-                if (text.indexOf(".") == text.length - 2) {
-                    number = text.replace(".0", "").toDouble()
-                } else if (value < 1) {
-                    number = BigDecimal(value).round(MathContext(3)).toDouble()
-                } else {
-                    number = (Math.round(value * 100.0) / 100.0)
-                }
-
-                field = number
-
-                editText!!.text!!.replace(0, editText!!.text!!.length, number.toString())
-
-                scrollBar!!.progress = range.mapTo(number, scrollBarRange).toInt()
-            }
+            field = value
+            scrollBar.progress = range.mapTo(value, scrollBarRange).toInt()
         }
 
-    var editText: EditText? = null
-
-    var scrollBar: SeekBar? = null
+    lateinit var scrollBar: SeekBar
 
     private var rangeNum = num
 

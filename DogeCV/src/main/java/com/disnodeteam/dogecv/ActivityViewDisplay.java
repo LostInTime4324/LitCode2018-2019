@@ -1,8 +1,8 @@
-package com.disnodeteam.dogecv
+package com.disnodeteam.dogecv;
 
-import android.app.Activity
-import android.content.Context
-import android.view.View
+import android.app.Activity;
+import android.content.Context;
+import android.view.View;
 
 /**
  * Created by guinea on 6/23/17.
@@ -36,36 +36,44 @@ import android.view.View
  * As a singleton, you'll want to pass ActivityViewDisplay.getInstance() instead of directly instantiating it.
  */
 
-class ActivityViewDisplay private constructor() : ViewDisplay {
+public class ActivityViewDisplay implements ViewDisplay {
+
+    //There should only be one instance of this class, so make a static reference to it
+    private static ActivityViewDisplay instance;
+    private static View main = null;
+
+    private ActivityViewDisplay() {
+    }
+
+    public static ActivityViewDisplay getInstance() {
+        if (instance == null) instance = new ActivityViewDisplay();
+        return instance;
+    }
 
     /**
      * Sets this display to be the current one in use, and starts it on the UI thread (as opposed to the robot controller thread)
      * @param context The context of the OpMode, can be obtained via hardwaremap.appContext;
      * @param view The view upon which this activity is to be displayed
      */
-    override fun setCurrentView(context: Context, view: View) {
-        val activity = context as Activity
-        activity.runOnUiThread {
-            if (main == null)
-                main = activity.currentFocus
-            activity.setContentView(view)
-        }
+    public void setCurrentView(final Context context, final View view) {
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (main == null)
+                    main = activity.getCurrentFocus();
+                activity.setContentView(view);
+            }
+        });
     }
 
-    override fun removeCurrentView(context: Context) {
-        val activity = context as Activity
-        activity.runOnUiThread { activity.setContentView(main!!.rootView) }
-    }
-
-    companion object {
-
-        //There should only be one instance of this class, so make a static reference to it
-        private var instance: ActivityViewDisplay? = null
-        private var main: View? = null
-
-        fun getInstance(): ActivityViewDisplay {
-            if (instance == null) instance = ActivityViewDisplay()
-            return instance
-        }
+    public void removeCurrentView(final Context context) {
+        final Activity activity = (Activity) context;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.setContentView(main.getRootView());
+            }
+        });
     }
 }

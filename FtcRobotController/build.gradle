@@ -35,4 +35,5 @@ dependencies {
         exclude module: 'support-annotations'
     }
     implementation project(':openCVLibrary343')
+    implementation project(':DogeCV')
 }

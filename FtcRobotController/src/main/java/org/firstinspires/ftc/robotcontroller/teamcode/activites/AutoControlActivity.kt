@@ -22,8 +22,8 @@ class AutoControlActivity : Activity() {
     inner class DrawingView(internal var context: Context) : View(context) {
 
         private val mPaint: Paint = Paint()
-        private var mBitmap: Bitmap? = null
-        private var mCanvas: Canvas? = null
+        private lateinit var mBitmap: Bitmap
+        private lateinit var mCanvas: Canvas
         private val mPath = Path()
         private val mBitmapPaint = Paint(Paint.DITHER_FLAG)
         private val circlePaint = Paint()

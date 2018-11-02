@@ -35,7 +35,7 @@ public class SamplingOrderDetector extends DogeCVDetector {
         UNKNOWN,
         LEFT,
         CENTER,
-        RIGHT
+        RIGHT;
     }
 
     // Which area scoring method to use
