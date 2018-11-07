@@ -54,7 +54,7 @@ public class CameraViewDisplay implements ViewDisplay {
 
     public void setCurrentView(final Context context, View newView) {
         // finding the resID dynamically allows this class to exist outside of the TeamCode module
-        final int resID = context.getResources().getIdentifier("RelativeLayout", "id", context.getPackageName());
+        final int resID = context.getResources().getIdentifier("CameraLayout", "id", context.getPackageName());
         final Activity activity = (Activity) context;
         final View queuedView = newView;
         activity.runOnUiThread(new Runnable() {
@@ -72,7 +72,7 @@ public class CameraViewDisplay implements ViewDisplay {
     }
 
     public void removeCurrentView(Context context) {
-        final int resID = context.getResources().getIdentifier("RelativeLayout", "id", context.getPackageName());
+        final int resID = context.getResources().getIdentifier("CameraLayout", "id", context.getPackageName());
         final Activity activity = (Activity) context;
         activity.runOnUiThread(new Runnable() {
             @Override

@@ -34,7 +34,7 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
     }
 
     fun createGraphs() {
-        aveErrorPoints = averagedArray(errorPoints.toTypedArray(), 1)
+        aveErrorPoints = averagedArray(errorPoints.toTypedArray(), 3)
 
         aveDerPoints = Array(numberOfPoints) {
             val x = aveErrorPoints[it].x

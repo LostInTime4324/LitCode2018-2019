@@ -4,6 +4,7 @@ import android.hardware.Camera
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames
 import org.firstinspires.ftc.robotcontroller.teamcode.Navigation
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables
@@ -20,11 +21,15 @@ class TeleOpMain : OpMode() {
     val elevatorMotor by lazy {
        hardwareMap[HardwareNames.ELEVATOR_MOTOR] as DcMotor
     }
+    val scoopMotor by lazy {
+        hardwareMap[HardwareNames.SCOOP_MOTOR] as DcMotor
+    }
 
-     /* val totemServo by lazy {
+      val totemServo by lazy {
          hardwareMap[HardwareNames.TOTEM_SERVO] as Servo
     }
-    */
+
+
 
     /* val intakeMotor by lazy {
         hardwareMap[HardwareNames.INTAKE_MOTOR] as DcMotor
@@ -34,11 +39,15 @@ class TeleOpMain : OpMode() {
     val nav  by lazy {
         Navigation(hardwareMap, telemetry)
     }
+    private operator fun Double.invoke(position: Double) {
+
+    }
 
     private val vars = Variables
 
     override fun init() {
-        // totemServo.setPosition(armServo.MIN_POSITION)
+
+        totemServo.position(0.0)
     }
 
     override fun loop() {
@@ -51,39 +60,41 @@ class TeleOpMain : OpMode() {
 
 
         //Set elevator power
-       if(gamepad1.dpad_down){
+       if(gamepad2.dpad_down){
 
             elevatorMotor.power = -1.0
         }
-        else if(gamepad1.dpad_up){
+        else if(gamepad2.dpad_up){
             elevatorMotor.power = 1.0
         }
         else{
             elevatorMotor.power = 0.0
         }
 
-        /* Open/close TOTEM servo (for knocking off totem)
 
-        if (gamepad1.a) {
-            if (totemServo.getPosition() == totemServo.MIN_POSITION) {
-                totemServo.setPosition(totemServo.MAX_POSITION)
-            }
-            else {
-                totemServo.setPosition(totemServo.MIN_POSITION)
-            }
-        }
-        */
 
-        /* Run intake (x: forward and y: reverse)
-        if (gamepad1.x) {
-            intakeMotor.power = 1.0
+
+
+//        if (gamepad1.a) {
+//            totemServo.position(1.0)
+//        }
+//        else {
+//            totemServo.position(0.0)
+//        }
+
+
+        // Run scoop (x: forward and y: reverse)
+        if (gamepad2.x) {
+            scoopMotor.power = 0.3
         }
-        else if (gamepad1.y) {
-            intakeMotor.power = -1.0
+        else if (gamepad2.y) {
+            scoopMotor.power = -0.3
         }
         else {
-            intakeMotor.power = 0.0
+            scoopMotor.power = 0.0
         }
-        */
+
     }
 }
+
+

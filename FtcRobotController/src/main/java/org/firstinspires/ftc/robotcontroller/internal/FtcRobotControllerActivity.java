@@ -63,6 +63,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity;
@@ -143,7 +145,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings("WeakerAccess")
-public class FtcRobotControllerActivity extends Activity implements CvCameraViewListener2 {
+public class FtcRobotControllerActivity extends Activity {
     // Used for logging success or failure messages
     private static final String TAG = "OCVSample::Activity";
 
@@ -156,65 +158,7 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
         // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-
-    // Loads camera view of OpenCV for us to use. This lets us see using OpenCV
-    private CameraBridgeViewBase mOpenCvCameraView;
-
-    // Used in Camera selection from menu (when implemented)
-    private boolean mIsJavaCamera = true;
-    private MenuItem mItemSwitchCamera = null;
-
-    // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
-    Mat mRgba;
-    Mat mRgbaF;
-    Mat mRgbaT;
-
-    static public SamplingOrderDetector detector = new SamplingOrderDetector();
-
-    static public boolean autoStarted = false;
-
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-                    Log.i(TAG, "OpenCV loaded successfully");
-                    mOpenCvCameraView.enableView();
-                }
-                break;
-                default: {
-                    super.onManagerConnected(status);
-                }
-                break;
-            }
-        }
-    };
-
-    public void onCameraViewStarted(int width, int height) {
-        mRgba = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaF = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaT = new Mat(width, width, CvType.CV_8UC4);
-    }
-
-    public void onCameraViewStopped() {
-        mRgba.release();
-    }
-
-    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-
-        // TODO Auto-generated method stub
-        mRgba = inputFrame.rgba();
-        // Rotate mRgba 90 degrees
-        Core.transpose(mRgba, mRgbaT);
-        Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0, 0, 0);
-        Core.flip(mRgbaF, mRgba, 1);
-
-        if (autoStarted)
-            return detector.process(mRgba);
-        else
-            return mRgba;
-    }
-
+    static public SamplingOrderDetector detector;
 
     public String getTag() {
         return TAG;
@@ -258,28 +202,6 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
 
     protected WifiMuteStateMachine wifiMuteStateMachine;
     protected MotionDetection motionDetection;
-
-    public Camera camera;
-
-    private Camera openFrontFacingCamera() {
-        int cameraId = -1;
-        Camera cam = null;
-        int numberOfCameras = Camera.getNumberOfCameras();
-        for (int i = 0; i < numberOfCameras; i++) {
-            Camera.CameraInfo info = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                cameraId = i;
-                break;
-            }
-        }
-        try {
-            cam = Camera.open(cameraId);
-        } catch (Exception e) {
-
-        }
-        return cam;
-    }
 
     protected class RobotRestarter implements Restarter {
 
@@ -349,12 +271,22 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        mOpenCvCameraView = (JavaCameraView) findViewById(R.id.show_camera_activity_java_surface_view);
+        // Setup detector
+        detector = new SamplingOrderDetector(); // Create the detector
+        detector.init(this, CameraViewDisplay.getInstance()); // Initialize detector with app context and camera
+        detector.useDefaults(); // Set detector to use default settings
 
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        detector.downscale = 0.4; // How much to downscale the input frames
 
-        mOpenCvCameraView.setCvCameraViewListener(this);
+        // Optional tuning
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.001;
 
+        detector.ratioScorer.weight = 15.0;
+        detector.ratioScorer.perfectRatio = 1.0;
+
+        detector.enable(); // Start detector
 
         RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
         RobotLog.vv(TAG, "onCreate()");
@@ -526,14 +458,6 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
     protected void onResume() {
         super.onResume();
         RobotLog.vv(TAG, "onResume()");
-        super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, mLoaderCallback);
-        } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
     }
 
     @Override
@@ -544,8 +468,6 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
             programmingModeController.stopProgrammingMode();
         }
         super.onPause();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
     }
 
     @Override
@@ -575,8 +497,6 @@ public class FtcRobotControllerActivity extends Activity implements CvCameraView
         preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
         RobotLog.cancelWriteLogcatToDisk();
         super.onDestroy();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
     }
 
     protected void bindToService() {

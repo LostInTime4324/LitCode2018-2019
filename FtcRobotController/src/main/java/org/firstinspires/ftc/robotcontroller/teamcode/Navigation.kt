@@ -18,9 +18,15 @@ import kotlin.math.abs
 class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val vars = Variables
 
+    val timer = ElapsedTime()
+
     val frontLeftMotor: DcMotor by lazy {
         hardwareMap[FRONT_LEFT_MOTOR] as DcMotor
     }
+    val scoopMotor by lazy {
+        hardwareMap[HardwareNames.SCOOP_MOTOR] as DcMotor
+    }
+
 
 //    val frontLeftPID = PID("Front Left", )
 
@@ -77,16 +83,23 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     fun getHeading() = imu.getAngularOrientation().firstAngle.toDouble()
 
     fun turnByGyro(angle: Double) {
-        val target = angle - getHeading()
+        val Kp = Variables[VariableNames.Turn_Kp]
+        val target = getHeading() - angle
         do {
-            val err = target - getHeading()
-            val power = turnPID.getPower(err)
-            telemetry.addData("Error", err)
-            telemetry.addData("Target", target)
-            telemetry.addData("Power", power)
-            turnByEncoder(power)
-        } while (turnPID.isMoving())
-        turnPID.createGraphs()
+            val err = getHeading() - target
+            val power = err *Kp
+            setPower(power, -power)
+        } while (abs(err) > 10)
+        resetPower()
+////        do {
+////            val err = target - getHeading()
+////            val power = turnPID.getPower(err)
+////            telemetry.addData("Error", err)
+////            telemetry.addData("Target", target)
+////            telemetry.addData("Power", power)
+////            turnByEncoder(power)
+////        } while (turnPID.isMoving())
+////        turnPID.createGraphs()
     }
 
     fun turnByEncoder(power: Double) {
@@ -125,11 +138,21 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         resetPower()
     }
 
+    fun driveByTime(speed: Double, seconds: Double) {
+        setPower(speed)
+        wait(seconds)
+        resetPower()
+    }
+
     fun setPower(left: Double, right: Double) {
-        frontLeftMotor.power = left
-        backLeftMotor.power = left
-        frontRightMotor.power = -right
+        frontLeftMotor.power = -left
+        backLeftMotor.power = -left
+        frontRightMotor.power = right
         backRightMotor.power = -right
+    }
+
+    fun setPower(power: Double) {
+        setPower(power, power)
     }
 
     fun resetPower() {
@@ -138,20 +161,13 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         }
     }
 
-    enum class Direction {
-        Forward,
-        Backward,
-        Right,
-        Left,
-    }
-
     enum class Orientation {
         Vertical,
         Horizontal
     }
 
     fun wait(seconds: Double) {
-        val timer = ElapsedTime()
-        while (timer.time() < seconds);
+        val start = timer.time()
+        while (timer.time() - start < seconds);
     }
 }
