@@ -52,7 +52,7 @@ public class SamplingOrderDetector extends DogeCVDetector {
 
 
     // Results for the detector
-    private GoldLocation currentOrder = GoldLocation.UNKNOWN;
+    private GoldLocation currentOrder = GoldLocation.CENTER;
     private GoldLocation lastOrder    = GoldLocation.UNKNOWN;
     private boolean      isFound      = false;
 
@@ -62,6 +62,12 @@ public class SamplingOrderDetector extends DogeCVDetector {
     private Mat yellowMask  = new Mat();
     private Mat whiteMask   = new Mat();
     private Mat hiarchy     = new Mat();
+
+    public long leftCertainty = 0;
+    public long centerCertainty = 0;
+    public long rightCertainty = 0;
+
+    public boolean started = false;
 
     public SamplingOrderDetector() {
         super();
@@ -186,21 +192,50 @@ public class SamplingOrderDetector extends DogeCVDetector {
         }
 
         //Draw found gold element
-        if(chosenYellowRect != null){
+        if(chosenYellowRect != null) {
             Imgproc.rectangle(displayMat,
                     new Point(chosenYellowRect.x, chosenYellowRect.y),
                     new Point(chosenYellowRect.x + chosenYellowRect.width, chosenYellowRect.y + chosenYellowRect.height),
                     new Scalar(255, 0, 0), 2);
 
             Imgproc.putText(displayMat,
-                    "Gold: " + String.format("%.2f X=%.2f", chosenYellowScore, (double)chosenYellowRect.x),
+                    "Gold: " + String.format("%.2f X=%.2f", chosenYellowScore, (double) chosenYellowRect.x),
                     new Point(chosenYellowRect.x - 5, chosenYellowRect.y - 10),
                     Core.FONT_HERSHEY_PLAIN,
                     1.3,
                     new Scalar(0, 255, 255),
                     2);
-
         }
+        if(started) {
+            if(chosenYellowRect != null) {
+                if(chosenYellowRect.x < displayMat.width() / 2) {
+                    leftCertainty++;
+                } else {
+                    centerCertainty++;
+                }
+            } else {
+                rightCertainty++;
+            }
+
+
+            if (leftCertainty > rightCertainty && leftCertainty > centerCertainty) {
+                currentOrder = GoldLocation.LEFT;
+            } else if (centerCertainty > rightCertainty && centerCertainty > leftCertainty) {
+                currentOrder = GoldLocation.CENTER;
+            } else {
+                currentOrder = GoldLocation.RIGHT;
+            }
+            String TAG = "OrderingTag";
+
+            Log.i(TAG, "Left Certainty: " + leftCertainty);
+            Log.i(TAG, "Center Certainty: " + centerCertainty);
+            Log.i(TAG, "Right Certainty: " + rightCertainty);
+            if (chosenYellowRect != null) {
+                Log.i(TAG, "Yellow x: " + chosenYellowRect.x);
+            }
+        }
+        lastOrder = currentOrder;
+
         //Draw found white elements
         for(int i=0;i<choosenWhiteRect.size();i++){
             Rect rect = choosenWhiteRect.get(i);
@@ -223,36 +258,36 @@ public class SamplingOrderDetector extends DogeCVDetector {
         }
 
         // If enough elements are found, compute gold position
-        if(choosenWhiteRect.get(0) != null && choosenWhiteRect.get(1) != null  && chosenYellowRect != null){
-            int leftCount = 0;
-            for(int i=0;i<choosenWhiteRect.size();i++){
-                Rect rect = choosenWhiteRect.get(i);
-                if(chosenYellowRect.x > rect.x){
-                    leftCount++;
-                }
-            }
-            if(leftCount == 0){
-                currentOrder = SamplingOrderDetector.GoldLocation.LEFT;
-            }
-
-            if(leftCount == 1){
-                currentOrder = SamplingOrderDetector.GoldLocation.CENTER;
-            }
-
-            if(leftCount >= 2){
-                currentOrder = SamplingOrderDetector.GoldLocation.RIGHT;
-            }
-            isFound = true;
-            lastOrder = currentOrder;
-
-        }else{
-            currentOrder = SamplingOrderDetector.GoldLocation.UNKNOWN;
-            isFound = false;
-        }
+//        if(choosenWhiteRect.get(0) != null && choosenWhiteRect.get(1) != null  && chosenYellowRect != null){
+//            int leftCount = 0;
+//            for(int i=0;i<choosenWhiteRect.size();i++){
+//                Rect rect = choosenWhiteRect.get(i);
+//                if(chosenYellowRect.x > rect.x){
+//                    leftCount++;
+//                }
+//            }
+//            if(leftCount == 0){
+//                currentOrder = SamplingOrderDetector.GoldLocation.LEFT;
+//            }
+//
+//            if(leftCount == 1){
+//                currentOrder = SamplingOrderDetector.GoldLocation.CENTER;
+//            }
+//
+//            if(leftCount >= 2){
+//                currentOrder = SamplingOrderDetector.GoldLocation.RIGHT;
+//            }
+//            isFound = true;
+//            lastOrder = currentOrder;
+//
+//        }else{
+//            currentOrder = SamplingOrderDetector.GoldLocation.UNKNOWN;
+//            isFound = false;
+//        }
 
         //Display Debug Information
-        Imgproc.putText(displayMat,"Gold Position: " + lastOrder.toString(),new Point(10,getAdjustedSize().height - 30),0,1, new Scalar(255,255,0),1);
-        Imgproc.putText(displayMat,"Current Track: " + currentOrder.toString(),new Point(10,getAdjustedSize().height - 10),0,0.5, new Scalar(255,255,255),1);
+        Imgproc.putText(displayMat,"Gold Position: " + lastOrder,new Point(10,getAdjustedSize().height - 30),0,1, new Scalar(255,255,0),1);
+//        Imgproc.putText(displayMat,"Current Track: " + currentOrder.toString(),new Point(10,getAdjustedSize().height - 10),0,0.5, new Scalar(255,255,255),1);
 
         return displayMat;
     }

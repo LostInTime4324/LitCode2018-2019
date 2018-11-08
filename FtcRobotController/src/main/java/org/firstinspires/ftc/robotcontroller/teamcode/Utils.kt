@@ -30,11 +30,11 @@ fun <T> Spinner.init(items: Array<T>, spinnerText: Int, itemSelected: (view: Vie
     }
 }
 
-fun <T> createSpinner(context: Context, vararg items: T, itemSelected: (view: View?, position: Int) -> Unit): Spinner {
-    val spinner = Spinner(context)
-    spinner.init(items, R.layout.spinner_text_wrap, itemSelected)
-    return spinner
-}
+fun <T> createSpinner(context: Context, vararg items: T, itemSelected: (view: View?, position: Int) -> Unit) =
+        Spinner(context).apply {
+            init(items, R.layout.spinner_text_wrap, itemSelected)
+        }
+
 
 fun String.toast(context: Context) = Toast.makeText(context, this, Toast.LENGTH_LONG).show()
 

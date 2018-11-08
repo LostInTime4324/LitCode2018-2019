@@ -10,9 +10,7 @@ object HardwareNames {
     const val BACK_LEFT_MOTOR = "BACKLEFT"
     const val ELEVATOR_MOTOR = "ELEVATOR"
     // const val INTAKE_MOTOR = "INTAKE"
-     const val TOTEM_SERVO = "TOTEMSERVO"
-     const val MIN_POSITION = 0.0
-    const val MAX_POSITION = 1.0
+    const val TOTEM_SERVO = "TOTEMSERVO"
     const val SCOOP_MOTOR = "SCOOPMOTOR"
     const val IMU = "IMU"
     const val SENSOR = "SENSOR"

@@ -3,16 +3,13 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.widget.SeekBar
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 object Variables {
 
     const val VARIABLE_PREFRENCES_TAG = "Variables"
 
-    val values = HashMap<String, Variable>()
+    val values = LinkedHashMap<String, Variable>()
 
     lateinit var preferences: SharedPreferences
 

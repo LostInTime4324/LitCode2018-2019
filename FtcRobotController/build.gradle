@@ -9,9 +9,9 @@ android {
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 23
+        targetSdkVersion 26
     }
-    compileSdkVersion 23
+    compileSdkVersion 26
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -36,4 +36,5 @@ dependencies {
     }
     implementation project(':openCVLibrary343')
     implementation project(':DogeCV')
+    compile project(path: ':DogeCV')
 }
