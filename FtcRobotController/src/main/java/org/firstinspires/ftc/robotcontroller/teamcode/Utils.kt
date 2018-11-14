@@ -18,19 +18,14 @@ object UtilVars {
 fun <T> Spinner.init(items: Array<T>, spinnerText: Int, itemSelected: (view: View?, position: Int) -> Unit) {
     adapter = ArrayAdapter<T>(context, spinnerText, items)
     onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-        var isEditable = true
         override fun onNothingSelected(view: AdapterView<*>?) {}
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (isEditable) {
-                isEditable = false
-                itemSelected(view, position)
-                isEditable = true
-            }
+            itemSelected(view, position)
         }
     }
 }
 
-fun <T> createSpinner(context: Context, vararg items: T, itemSelected: (view: View?, position: Int) -> Unit): Spinner {
+fun <T> createSpinner(context: Context, items: Array<T>, itemSelected: (view: View?, position: Int) -> Unit): Spinner {
     val spinner = Spinner(context)
     spinner.init(items, R.layout.spinner_text_wrap, itemSelected)
     return spinner

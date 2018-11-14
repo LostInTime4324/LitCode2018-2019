@@ -11,20 +11,25 @@ import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_LEFT_M
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_RIGHT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.IMU
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.X_DISTANCE_SENSOR
+import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import kotlin.math.abs
 
 class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
-    val vars = Variables
-
     val timer = ElapsedTime()
+
+    val scoopMotor by lazy {
+        hardwareMap[HardwareNames.SCOOP_MOTOR] as DcMotor
+    }
+
+    val elevatorMotor by lazy {
+        hardwareMap[HardwareNames.ELEVATOR_MOTOR] as DcMotor
+    }
 
     val frontLeftMotor: DcMotor by lazy {
         hardwareMap[FRONT_LEFT_MOTOR] as DcMotor
-    }
-    val scoopMotor by lazy {
-        hardwareMap[HardwareNames.SCOOP_MOTOR] as DcMotor
     }
 
 
@@ -67,9 +72,9 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     }
 
 
-    val turnPID = PID("Turn", vars[VariableNames.Turn_Kp], vars[VariableNames.Turn_Kd], vars[VariableNames.Turn_Ki])
-    val turnCorrectionPID = PID("Turn Correction", vars[VariableNames.Turn_Correction_Kp], vars[VariableNames.Turn_Correction_Kd], vars[VariableNames.Turn_Correction_Ki])
-    val drivePID = PID("Drive", vars[VariableNames.Drive_Kp], vars[VariableNames.Drive_Kd], vars[VariableNames.Drive_Ki])
+    val turnPID = PID("Turn", vars[Turn_Kp], vars[Turn_Kd], vars[Turn_Ki])
+    val turnCorrectionPID = PID("Turn Correction", vars[Turn_Correction_Kp], vars[Turn_Correction_Kd], vars[Turn_Correction_Ki])
+    val drivePID = PID("Drive", vars[Drive_Kp], vars[Drive_Kd], vars[Drive_Ki])
     val distanceSensor by lazy { hardwareMap[X_DISTANCE_SENSOR] as DistanceSensor }
 
     val COUNTS_PER_MOTOR_REV = 1120.0    // eg: TETRIX Motor Encoder
@@ -82,14 +87,26 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
 
     fun getHeading() = imu.getAngularOrientation().firstAngle.toDouble()
 
+    fun moveElevator(power: Double, seconds: Double) {
+        elevatorMotor.power = power
+        wait(seconds)
+        elevatorMotor.power = 0.0
+    }
+
+    fun moveScoop(power: Double, seconds: Double) {
+        scoopMotor.power = power
+        wait(seconds)
+        scoopMotor.power = 0.0
+    }
+
     fun turnByGyro(angle: Double) {
-        val Kp = Variables[VariableNames.Turn_Kp]
+        val Kp = vars[Turn_Kp]
         val target = getHeading() - angle
         do {
             val err = getHeading() - target
-            val power = err *Kp
+            val power = err * Kp
             setPower(power, -power)
-        } while (abs(err) > 10)
+        } while (abs(err) > 5)
         resetPower()
 ////        do {
 ////            val err = target - getHeading()

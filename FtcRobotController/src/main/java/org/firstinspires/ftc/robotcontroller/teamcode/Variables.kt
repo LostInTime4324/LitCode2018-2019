@@ -12,7 +12,7 @@ object Variables {
 
     const val VARIABLE_PREFRENCES_TAG = "Variables"
 
-    val values = HashMap<String, Variable>()
+    val values = LinkedHashMap<String, Variable>()
 
     lateinit var preferences: SharedPreferences
 

@@ -29,7 +29,9 @@ class TeleOpMain : OpMode() {
          hardwareMap[HardwareNames.TOTEM_SERVO] as Servo
     }
 
+    var powerSign = 1.0
 
+    var aPressed = false;
 
     /* val intakeMotor by lazy {
         hardwareMap[HardwareNames.INTAKE_MOTOR] as DcMotor
@@ -39,21 +41,22 @@ class TeleOpMain : OpMode() {
     val nav  by lazy {
         Navigation(hardwareMap, telemetry)
     }
-    private operator fun Double.invoke(position: Double) {
-
-    }
 
     private val vars = Variables
 
     override fun init() {
-
-        totemServo.position(0.0)
     }
 
     override fun loop() {
+        if(!aPressed && gamepad1.a) {
+            powerSign *= -1.0
+            aPressed = true
+        } else if(aPressed && !gamepad1.a) {
+            aPressed = false
+        }
         //Go straight or back
         if (abs(leftY) >= 0.1 || abs(rightY) >= 0.1) {
-            nav.setPower(leftY, rightY)
+            nav.setPower(leftY * powerSign, rightY * powerSign)
         } else {
             nav.resetPower()
         }
@@ -61,7 +64,6 @@ class TeleOpMain : OpMode() {
 
         //Set elevator power
        if(gamepad2.dpad_down){
-
             elevatorMotor.power = -1.0
         }
         else if(gamepad2.dpad_up){
@@ -70,7 +72,6 @@ class TeleOpMain : OpMode() {
         else{
             elevatorMotor.power = 0.0
         }
-
 
 
 
@@ -93,8 +94,5 @@ class TeleOpMain : OpMode() {
         else {
             scoopMotor.power = 0.0
         }
-
     }
 }
-
-

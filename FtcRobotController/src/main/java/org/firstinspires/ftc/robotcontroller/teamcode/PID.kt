@@ -3,8 +3,8 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.Graph
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity
-import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphSeries
-import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphType
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.createSeries
+
 import kotlin.math.max
 import kotlin.math.min
 
@@ -58,17 +58,16 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
 
         GraphActivity.graphs +=
                 Graph("$name: Points",
-                        GraphSeries(errorPoints, "Error Points", GraphType.LineGraph),
-                        GraphSeries(derivativePoints, "Derivative Points", GraphType.LineGraph),
-                        GraphSeries(integralPoints, "Integral Points", GraphType.LineGraph),
-                                GraphSeries(powerPoints, "Power Points", GraphType.LineGraph)
+                        createSeries(errorPoints, "Error Points"),
+                        createSeries(derivativePoints, "Derivative Points"),
+                        createSeries(integralPoints, "Integral Points"),
+                        createSeries(powerPoints, "Power Points")
                 )
         GraphActivity.graphs +=
-                Graph("$name: Averaged Points}",
-                        GraphSeries(aveErrorPoints, "Averaged Error Points", GraphType.LineGraph),
-                        GraphSeries(aveDerPoints, "Derivative Points of Averaged Error Points", GraphType.LineGraph),
-                        GraphSeries(aveIntPoints, "Integral Points of Averaged Error Points", GraphType.LineGraph),
-                        GraphSeries(zeros, "Zeros", GraphType.PointGraph)
+                Graph("$name: Averaged Points",
+                        createSeries(aveErrorPoints, "Averaged Error Points"),
+                        createSeries(aveDerPoints, "Derivative Points of Averaged Error Points"),
+                        createSeries(aveIntPoints, "Integral Points of Averaged Error Points")
                 )
     }
 
