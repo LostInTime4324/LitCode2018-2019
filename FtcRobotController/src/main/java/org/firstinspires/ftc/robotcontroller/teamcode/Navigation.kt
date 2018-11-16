@@ -100,23 +100,17 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     }
 
     fun turnByGyro(angle: Double) {
-        val Kp = vars[Turn_Kp]
         val target = getHeading() - angle
         do {
             val err = getHeading() - target
-            val power = err * Kp
-            setPower(power, -power)
-        } while (abs(err) > 5)
+            val power = turnPID.getPower(err)
+            telemetry.addData("Error", err)
+            telemetry.addData("Target", target)
+            telemetry.addData("Power", power)
+            turnByEncoder(power)
+        } while (turnPID.isMoving())
+        turnPID.createGraphs()
         resetPower()
-////        do {
-////            val err = target - getHeading()
-////            val power = turnPID.getPower(err)
-////            telemetry.addData("Error", err)
-////            telemetry.addData("Target", target)
-////            telemetry.addData("Power", power)
-////            turnByEncoder(power)
-////        } while (turnPID.isMoving())
-////        turnPID.createGraphs()
     }
 
     fun turnByEncoder(power: Double) {

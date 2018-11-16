@@ -16,9 +16,6 @@ class AutoMain : LinearOpMode() {
     val nav by lazy {
         Navigation(hardwareMap, telemetry)
     }
-    val elevatorMotor by lazy {
-        hardwareMap[HardwareNames.ELEVATOR_MOTOR] as DcMotor
-    }
 
     val autoType get() = vars[Auto_Type]
     

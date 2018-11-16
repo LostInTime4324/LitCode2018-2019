@@ -15,16 +15,16 @@ import org.firstinspires.ftc.robotcontroller.teamcode.Vector
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity.Companion.seriesColors
 import org.firstinspires.ftc.robotcontroller.teamcode.createSpinner
 import kotlin.math.sin
-
 class GraphActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
 
-        val pid = PID("Test", 1.0, 0.0, 0.0)
+        val pid = PID("Test", 1.0, 1.0, 1.0)
 
         for (i in 0..100) {
-            pid.getPower(sin(i.toDouble()))
+            pid.getPower(sin(i / 10.0))
+            Thread.sleep(100)
         }
 
         pid.createGraphs()
@@ -50,10 +50,11 @@ class GraphActivity : Activity() {
     }
 }
 
+
 class Graph(var name: String, vararg val graphSeries: LineGraphSeries<DataPoint>) {
     fun show(graphView: GraphView) {
         graphView.removeAllSeries()
-        graphSeries.forEachIndexed { i, series ->
+        graphSeries.forEach { series ->
             graphView.addSeries(series)
         }
     }

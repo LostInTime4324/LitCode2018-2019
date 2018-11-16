@@ -99,13 +99,14 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
         derivativePoints.add(Vector(time, errorDerivative))
         integralPoints.add(Vector(time, errorIntegral))
         powerPoints.add(Vector(time, power))
-
         prevTime = time
         prevError = error
         return power
     }
 
-    fun isMoving() = powerPoints.subList(numberOfPoints - 10, numberOfPoints).any {it.y >= 0.15}
+    fun isMoving() = powerPoints.subList(max(numberOfPoints - 10, 0), numberOfPoints).sumBy {
+        if(it.y >= 0.15) 1 else 0
+    } > min(numberOfPoints, 10) / 2
 
     fun wait(seconds: Double) {
         val startTime = timer.time()
