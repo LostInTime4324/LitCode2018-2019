@@ -7,33 +7,22 @@ import android.os.Bundle
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import com.jjoe64.graphview.series.Series
 import com.qualcomm.ftcrobotcontroller.R
 import kotlinx.android.synthetic.main.activity_graph.*
-import org.firstinspires.ftc.robotcontroller.teamcode.PID
-import org.firstinspires.ftc.robotcontroller.teamcode.Vector
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity.Companion.seriesColors
 import org.firstinspires.ftc.robotcontroller.teamcode.createSpinner
-import kotlin.math.sin
+
 class GraphActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
-
-        val pid = PID("Test", 1.0, 1.0, 1.0)
-
-        for (i in 0..100) {
-            pid.getPower(sin(i / 10.0))
-            Thread.sleep(100)
-        }
-
-        pid.createGraphs()
 
         graphView.legendRenderer.isVisible = true
 
         val graphSpinner = createSpinner(this, graphs.toArray()) { item, pos ->
             graphs[pos].show(graphView)
         }
+
         spinnerLayout.addView(graphSpinner)
     }
 
@@ -47,33 +36,40 @@ class GraphActivity : Activity() {
                 Color.parseColor("#ffff00"),
                 Color.parseColor("#993399")
         )
+        fun addGraphs(vararg newGraphs: Graph) {
+            graphs += newGraphs
+        }
     }
 }
 
 
-class Graph(var name: String, vararg val graphSeries: LineGraphSeries<DataPoint>) {
+class Graph(name: String, vararg val graphSeries: LineGraphSeries<DataPoint>) {
+    constructor(name: String, points: ArrayList<DataPoint>) : this(name, Series(points, ""))
+
     fun show(graphView: GraphView) {
         graphView.removeAllSeries()
+        graphView.legendRenderer.isVisible = graphSeries.count() > 1
         graphSeries.forEach { series ->
             graphView.addSeries(series)
         }
     }
 
     init {
-        name += " #${GraphActivity.graphs.count()}"
         graphSeries.forEachIndexed { i, series ->
             series.color = seriesColors[i]
+
         }
     }
 
+    val name = name + " #${GraphActivity.graphs.count()}"
     override fun toString() = name
+
 }
 
-fun createSeries(points: Array<Vector>, name: String): LineGraphSeries<DataPoint> {
-    val dataPoints = points.map { DataPoint(it.x, it.y) }.toTypedArray()
-    return LineGraphSeries<DataPoint>(dataPoints).apply {
+fun Series(points: Array<DataPoint>, name: String): LineGraphSeries<DataPoint> {
+    return LineGraphSeries<DataPoint>(points).apply {
         title = name
     }
 }
 
-fun createSeries(points: ArrayList<Vector>, name: String) = createSeries(points.toTypedArray(), name)
+fun Series(points: ArrayList<DataPoint>, name: String) = Series(points.toTypedArray(), name)

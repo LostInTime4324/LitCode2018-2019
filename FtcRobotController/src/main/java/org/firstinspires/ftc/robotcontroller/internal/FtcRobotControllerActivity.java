@@ -105,6 +105,7 @@ import com.qualcomm.robotcore.wifi.NetworkType;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
+import org.firstinspires.ftc.robotcontroller.teamcode.OrderDetector;
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity;
@@ -158,7 +159,7 @@ public class FtcRobotControllerActivity extends Activity {
         // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    static public SamplingOrderDetector detector;
+    static public OrderDetector detector;
 
     public String getTag() {
         return TAG;
@@ -272,7 +273,7 @@ public class FtcRobotControllerActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Setup detector
-        detector = new SamplingOrderDetector(); // Create the detector
+        detector = new OrderDetector(); // Create the detector
         detector.init(this, CameraViewDisplay.getInstance()); // Initialize detector with app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
@@ -285,8 +286,6 @@ public class FtcRobotControllerActivity extends Activity {
 
         detector.ratioScorer.weight = 15.0;
         detector.ratioScorer.perfectRatio = 1.0;
-
-        detector.enable(); // Start detector
 
         RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
         RobotLog.vv(TAG, "onCreate()");
@@ -320,7 +319,6 @@ public class FtcRobotControllerActivity extends Activity {
 
         receivedUsbAttachmentNotifications = new ConcurrentLinkedQueue<UsbDevice>();
         eventLoop = null;
-
 
         preferencesHelper = new PreferencesHelper(TAG, context);
         preferencesHelper.writeBooleanPrefIfDifferent(context.getString(R.string.pref_rc_connected), true);
@@ -413,6 +411,18 @@ public class FtcRobotControllerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 startActivity(intent3);
+            }
+        });
+        findViewById(R.id.cameraToggle).setOnClickListener(new View.OnClickListener() {
+            boolean checked = false;
+            @Override
+            public void onClick(View view) {
+                if(checked) {
+                    detector.disable();
+                } else {
+                    detector.enable();
+                }
+                checked = !checked;
             }
         });
         Variables.init(this);

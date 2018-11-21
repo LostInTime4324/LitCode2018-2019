@@ -212,6 +212,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:layout_marginBottom="22dp"
         android:text="Autonomous" />
 
+    <Switch
+        android:id="@+id/cameraToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="119dp" />
+
   </RelativeLayout>
 
   <WebView

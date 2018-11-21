@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.BACK_RIGHT_M
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_LEFT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_RIGHT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.IMU
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.X_DISTANCE_SENSOR
 import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 import org.firstinspires.ftc.robotcore.external.Telemetry
@@ -75,7 +74,6 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val turnPID = PID("Turn", vars[Turn_Kp], vars[Turn_Kd], vars[Turn_Ki])
     val turnCorrectionPID = PID("Turn Correction", vars[Turn_Correction_Kp], vars[Turn_Correction_Kd], vars[Turn_Correction_Ki])
     val drivePID = PID("Drive", vars[Drive_Kp], vars[Drive_Kd], vars[Drive_Ki])
-    val distanceSensor by lazy { hardwareMap[X_DISTANCE_SENSOR] as DistanceSensor }
 
     val COUNTS_PER_MOTOR_REV = 1120.0    // eg: TETRIX Motor Encoder
     val DRIVE_GEAR_REDUCTION = 1.0     // This is < 1.0 if geared UP
@@ -101,21 +99,20 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
 
     fun turnByGyro(angle: Double) {
         val target = getHeading() - angle
-        do {
-            val err = getHeading() - target
-            val power = turnPID.getPower(err)
-            telemetry.addData("Error", err)
-            telemetry.addData("Target", target)
-            telemetry.addData("Power", power)
-            turnByEncoder(power)
-        } while (turnPID.isMoving())
-        turnPID.createGraphs()
-        resetPower()
+        val startTime = timer.time()
+        try {
+            do {
+                val err = getHeading() - target
+                val power = turnPID.getPower(err)
+                telemetry.update()
+                setPower(power, -power)
+            } while (turnPID.isMoving() && timer.time() - startTime < 5)
+        } finally {
+            turnPID.createGraphs()
+            resetPower()
+        }
     }
 
-    fun turnByEncoder(power: Double) {
-
-    }
 
     fun driveByPID(inches: Double) {
         val startHeading = getHeading()
@@ -137,7 +134,6 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         }
 
         while (motors.all { it.isBusy() }) {
-
             // Display it for the driver.
             telemetry.addData("Path1", "Running to ${inches}")
             motors.forEach {
