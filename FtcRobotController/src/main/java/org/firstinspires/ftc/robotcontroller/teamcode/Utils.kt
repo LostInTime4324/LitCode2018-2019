@@ -8,6 +8,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import com.qualcomm.ftcrobotcontroller.R
 import org.firstinspires.ftc.robotcontroller.teamcode.UtilVars.mathContext
+import org.firstinspires.ftc.robotcore.external.Telemetry
 import java.math.BigDecimal
 import java.math.MathContext
 
@@ -34,3 +35,7 @@ fun <T> createSpinner(context: Context, items: Array<T>, itemSelected: (view: Vi
 fun String.toast(context: Context) = Toast.makeText(context, this, Toast.LENGTH_LONG).show()
 
 fun Double.toRoundedString() = BigDecimal(this).round(mathContext).stripTrailingZeros().toPlainString()
+
+operator fun Telemetry?.plusAssign(data: String) {
+    this?.addData(data, "")
+}

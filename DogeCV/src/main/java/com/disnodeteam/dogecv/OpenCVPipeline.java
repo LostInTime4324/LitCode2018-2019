@@ -133,7 +133,6 @@ public abstract class OpenCVPipeline implements CameraBridgeViewBase.CvCameraVie
      * because dean kamen help you if something bad happens from that
      */
     public void disable() {
-
         if(!isVuforia){
             cameraView.disableView();
         }

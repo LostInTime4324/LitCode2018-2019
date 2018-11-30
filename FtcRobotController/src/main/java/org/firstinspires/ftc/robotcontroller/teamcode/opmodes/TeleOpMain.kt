@@ -16,7 +16,7 @@ class TeleOpMain : OpMode() {
 
     
 
-    var powerSign = 1.0
+    var switched = false;
 
     var aPressed = false
 
@@ -36,14 +36,18 @@ class TeleOpMain : OpMode() {
 
     override fun loop() {
         if(!aPressed && gamepad1.a) {
-            powerSign *= -1.0
+            switched = ! switched
             aPressed = true
         } else if(aPressed && !gamepad1.a) {
             aPressed = false
         }
         //Go straight or back
         if (abs(leftY) >= 0.1 || abs(rightY) >= 0.1) {
-            nav.setPower(leftY * powerSign, rightY * powerSign)
+            if(switched) {
+                nav.setPower(-leftY, -rightY)
+            } else {
+                nav.setPower(rightY, leftY)
+            }
         } else {
             nav.resetPower()
         }

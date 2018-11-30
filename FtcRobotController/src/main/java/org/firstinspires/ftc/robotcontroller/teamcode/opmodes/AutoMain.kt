@@ -21,52 +21,45 @@ class AutoMain : LinearOpMode() {
 
     override fun runOpMode() {
         detector.telemetry = telemetry
+
         detector.enable()
-        telemetry.addData("Status", "Init")
+        detector.start()
+
         waitForStart()
-        telemetry.addData("Status", "Starting")
-        telemetry.addData("Auto Type: ", autoType)
-        telemetry.update()
 
-//        nav.moveElevator(1.0, vars[Elevator_Up_Time])
+        detector.start()
 
-        detector.started = true
 
-//        nav.driveByTime(vars[Auto_Power], 0.3)
-//
-//        nav.moveElevator(-1.0, vars[Elevator_Down_Time])
+        nav.moveElevator(1.0, vars[Elevator_Up_Time])
+
+        nav.driveByTime(vars[Auto_Power], 0.3)
+
+        nav.moveElevator(-1.0, vars[Elevator_Down_Time])
         nav.wait(0.3 + vars[Elevator_Down_Time])
 
         val order = detector.currentOrder
 
-        telemetry.addData("Order", order)
-        telemetry.addData("Left Certainty", detector.leftCertainty)
-        telemetry.addData("Center Certainty", detector.centerCertainty)
-        telemetry.addData("Right Certainty", detector.rightCertainty)
-        telemetry.update()
-
-        when (order) {
-            SamplingOrderDetector.GoldLocation.LEFT -> {
-                nav.turnByGyro(-vars[Turn_Angle])
-            }
-            SamplingOrderDetector.GoldLocation.RIGHT -> {
-                nav.turnByGyro(vars[Turn_Angle])
-            }
-        }
+//        when (order) {
+//            SamplingOrderDetector.GoldLocation.LEFT -> {
+//                nav.turnByGyro(-vars[Turn_Angle])
+//            }
+//            SamplingOrderDetector.GoldLocation.RIGHT -> {
+//                nav.turnByGyro(vars[Turn_Angle])
+//            }
+//        }
 
         nav.driveByTime(vars[Auto_Power], vars[Drive_Time])
 
-        //nav.moveScoop(-1.0, vars[Scoop_Lowering_Time])
-
-        when (order) {
-            SamplingOrderDetector.GoldLocation.LEFT -> {
-                nav.turnByGyro(vars[Turn_Angle] * 2)
-                nav.driveByTime(vars[Auto_Power], vars[Drive_Time_2])
-            }
-            SamplingOrderDetector.GoldLocation.RIGHT -> {
-                nav.turnByGyro(-vars[Turn_Angle] * 2)
-                nav.driveByTime(vars[Auto_Power], vars[Drive_Time_2])
-            }
-        }
+//        when (order) {
+//            SamplingOrderDetector.GoldLocation.LEFT -> {
+//                nav.turnByGyro(vars[Turn_Angle] * 2)
+//                nav.driveByTime(vars[Auto_Power], vars[Drive_Time_2])
+//            }
+//            SamplingOrderDetector.GoldLocation.RIGHT -> {
+//                nav.turnByGyro(-vars[Turn_Angle] * 2)
+//                nav.driveByTime(vars[Auto_Power], vars[Drive_Time_2])
+//            }
+//        }
+        detector.disable()
     }
 }

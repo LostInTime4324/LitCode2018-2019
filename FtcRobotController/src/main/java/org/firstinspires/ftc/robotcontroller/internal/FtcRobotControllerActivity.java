@@ -266,12 +266,12 @@ public class FtcRobotControllerActivity extends Activity {
         detector.downscale = 0.4; // How much to downscale the input frames
 
         // Optional tuning
-        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        detector.setAreaScoringMethod(DogeCV.AreaScoringMethod.MAX_AREA); // Can also be PERFECT_AREA
         //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-        detector.maxAreaScorer.weight = 0.001;
+        detector.getMaxAreaScorer().weight = 0.001;
 
-        detector.ratioScorer.weight = 15.0;
-        detector.ratioScorer.perfectRatio = 1.0;
+        detector.getRatioScorer().weight = 15.0;
+        detector.getRatioScorer().perfectRatio = 1.0;
 
         RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
         RobotLog.vv(TAG, "onCreate()");
