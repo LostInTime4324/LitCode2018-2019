@@ -287,13 +287,6 @@ public class OrderDetector extends DogeCVDetector {
         return displayMat;
     }
 
-    public void reset() {
-        leftCertainty = 0;
-        centerCertainty = 0;
-        rightCertainty = 0;
-        currentOrder = GoldLocation.RIGHT;
-    }
-
     @Override
     public void useDefaults() {
         if (areaScoringMethod == DogeCV.AreaScoringMethod.MAX_AREA) {

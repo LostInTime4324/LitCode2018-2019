@@ -2,29 +2,29 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DistanceSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.BACK_LEFT_MOTOR
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.BACK_RIGHT_MOTOR
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_LEFT_MOTOR
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_RIGHT_MOTOR
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.IMU
+import org.firstinspires.ftc.robotcontroller.teamcode.HardwareName.*
 import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import kotlin.math.abs
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 
 class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val timer = ElapsedTime()
 
-    val scoopMotor by lazy {
-        hardwareMap[HardwareNames.SCOOP_MOTOR] as DcMotor
+    val mineralServo by lazy {
+        hardwareMap[MINERAL_SERVO] as Servo
     }
 
     val elevatorMotor by lazy {
-        hardwareMap[HardwareNames.ELEVATOR_MOTOR] as DcMotor
+        hardwareMap[ELEVATOR_MOTOR] as DcMotor
+    }
+
+    val armMotor by lazy {
+        hardwareMap[ARM_MOTOR] as DcMotor
     }
 
     val frontLeftMotor: DcMotor by lazy {
@@ -83,7 +83,7 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val TURN_SPEED = 1
 
 
-    fun getHeading() = imu.getAngularOrientation().firstAngle.toDouble()
+    fun getHeading() = imu.angularOrientation.firstAngle.toDouble()
 
     fun moveElevator(power: Double, seconds: Double) {
         elevatorMotor.power = power
@@ -91,14 +91,8 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         elevatorMotor.power = 0.0
     }
 
-    fun moveScoop(power: Double, seconds: Double) {
-        scoopMotor.power = power
-        wait(seconds)
-        scoopMotor.power = 0.0
-    }
-
-    fun turnByGyro(angle: Double) {
-        val target = getHeading() - angle
+    fun turnByGyro(degrees: Double) {
+        val target = getHeading() - degrees
         val startTime = timer.time()
         try {
             do {
