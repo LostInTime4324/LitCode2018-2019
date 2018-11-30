@@ -4,16 +4,13 @@ package org.firstinspires.ftc.robotcontroller.teamcode
  * Created by walker on 3/4/18.
  */
 object HardwareNames {
-    const val FRONT_RIGHT_MOTOR = "FRONTRIGHT"
-    const val BACK_RIGHT_MOTOR = "BACKRIGHT"
-    const val FRONT_LEFT_MOTOR = "FRONTLEFT"
-    const val BACK_LEFT_MOTOR = "BACKLEFT"
-    const val ELEVATOR_MOTOR = "ELEVATOR"
-    // const val INTAKE_MOTOR = "INTAKE"
-    const val TOTEM_SERVO = "TOTEMSERVO"
-    const val SCOOP_MOTOR = "SCOOPMOTOR"
-    const val IMU = "IMU"
-    const val SENSOR = "SENSOR"
-    const val X_DISTANCE_SENSOR = "XSENSOR"
-    const val Y_DISTANCE_SENSOR = "YSENSOR"
+    val FRONT_RIGHT_MOTOR = "FRONTRIGHT"
+    val BACK_RIGHT_MOTOR = "BACKRIGHT"
+    val FRONT_LEFT_MOTOR = "FRONTLEFT"
+    val BACK_LEFT_MOTOR = "BACKLEFT"
+    val ELEVATOR_MOTOR = "ELEVATOR"
+    val TOTEM_SERVO = "TOTEM"
+    val ARM_MOTOR = "ARM"
+    val SCOOP_MOTOR = "SCOOP"
+    val IMU = "IMU"
 }

@@ -1,6 +1,4 @@
-package com.disnodeteam.dogecv.detectors.roverrukus;
-
-import android.util.Log;
+package org.firstinspires.ftc.robotcontroller.teamcode;
 
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
@@ -11,6 +9,7 @@ import com.disnodeteam.dogecv.scoring.MaxAreaScorer;
 import com.disnodeteam.dogecv.scoring.PerfectAreaScorer;
 import com.disnodeteam.dogecv.scoring.RatioScorer;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -28,7 +27,7 @@ import java.util.List;
  * Created by Victo on 9/10/2018.
  */
 
-public class SamplingOrderDetector extends DogeCVDetector {
+public class OrderDetector extends DogeCVDetector {
 
     // Enum to describe gold location
     public enum GoldLocation {
@@ -67,9 +66,11 @@ public class SamplingOrderDetector extends DogeCVDetector {
     public long centerCertainty = 0;
     public long rightCertainty = 0;
 
+    public Telemetry telemetry = null;
+
     public boolean started = false;
 
-    public SamplingOrderDetector() {
+    public OrderDetector() {
         super();
         this.detectorName = "Sampling Order Detector";
     }
@@ -216,6 +217,10 @@ public class SamplingOrderDetector extends DogeCVDetector {
             } else {
                 rightCertainty++;
             }
+            telemetry.addData("Left: ", leftCertainty);
+            telemetry.addData("Center: ", centerCertainty);
+            telemetry.addData("Rigth: ", rightCertainty);
+            telemetry.update();
         }
 
         if (leftCertainty > centerCertainty && leftCertainty > rightCertainty) {
@@ -257,21 +262,21 @@ public class SamplingOrderDetector extends DogeCVDetector {
 //                }
 //            }
 //            if(leftCount == 0){
-//                currentOrder = SamplingOrderDetector.GoldLocation.LEFT;
+//                currentOrder = OrderDetector.GoldLocation.LEFT;
 //            }
 //
 //            if(leftCount == 1){
-//                currentOrder = SamplingOrderDetector.GoldLocation.CENTER;
+//                currentOrder = OrderDetector.GoldLocation.CENTER;
 //            }
 //
 //            if(leftCount >= 2){
-//                currentOrder = SamplingOrderDetector.GoldLocation.RIGHT;
+//                currentOrder = OrderDetector.GoldLocation.RIGHT;
 //            }
 //            isFound = true;
 //            lastOrder = currentOrder;
 //
 //        }else{
-//            currentOrder = SamplingOrderDetector.GoldLocation.UNKNOWN;
+//            currentOrder = OrderDetector.GoldLocation.UNKNOWN;
 //            isFound = false;
 //        }
 
@@ -280,6 +285,13 @@ public class SamplingOrderDetector extends DogeCVDetector {
 //        Imgproc.putText(displayMat,"Current Track: " + currentOrder.toString(),new Point(10,getAdjustedSize().height - 10),0,0.5, new Scalar(255,255,255),1);
 
         return displayMat;
+    }
+
+    public void reset() {
+        leftCertainty = 0;
+        centerCertainty = 0;
+        rightCertainty = 0;
+        currentOrder = GoldLocation.RIGHT;
     }
 
     @Override

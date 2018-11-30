@@ -10,12 +10,11 @@ import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.BACK_RIGHT_M
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_LEFT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.FRONT_RIGHT_MOTOR
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.IMU
-import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames.X_DISTANCE_SENSOR
 import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import kotlin.math.abs
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 
 class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val timer = ElapsedTime()
@@ -32,26 +31,34 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         hardwareMap[FRONT_LEFT_MOTOR] as DcMotor
     }
 
+
+//    val frontLeftPID = PID("Front Left", )
+
     val backLeftMotor by lazy {
         hardwareMap[BACK_LEFT_MOTOR] as DcMotor
     }
+
+//    val backLeftPID = PID("Back Left", )
 
     val frontRightMotor by lazy {
         hardwareMap[FRONT_RIGHT_MOTOR] as DcMotor
     }
 
+//    val frontLeftPID = PID("Front Left", )
+
     val backRightMotor by lazy {
         hardwareMap[BACK_RIGHT_MOTOR] as DcMotor
     }
 
-
+//    val backLeftPID = PID("Back Left", )
 
     val motors by lazy { arrayOf(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor) }
 
     val averagePosition: Double get() = motors.sumBy { it.currentPosition } / (COUNTS_PER_INCH * motors.size)
 
     val imu: BNO055IMU by lazy {
-        val params = BNO055IMU.Parameters().apply {
+        val params = BNO055IMU.Parameters()
+        with(params) {
             mode = BNO055IMU.SensorMode.IMU
             angleUnit = BNO055IMU.AngleUnit.DEGREES
             accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
@@ -63,14 +70,10 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         }
     }
 
-    //    val frontLeftPID = PID("Front Left", )
-//    val backLeftPID = PID("Back Left", )
-//    val frontLeftPID = PID("Front Left", )
-//    val backLeftPID = PID("Back Left", )
+
     val turnPID = PID("Turn", vars[Turn_Kp], vars[Turn_Kd], vars[Turn_Ki])
     val turnCorrectionPID = PID("Turn Correction", vars[Turn_Correction_Kp], vars[Turn_Correction_Kd], vars[Turn_Correction_Ki])
     val drivePID = PID("Drive", vars[Drive_Kp], vars[Drive_Kd], vars[Drive_Ki])
-    val distanceSensor by lazy { hardwareMap[X_DISTANCE_SENSOR] as DistanceSensor }
 
     val COUNTS_PER_MOTOR_REV = 1120.0    // eg: TETRIX Motor Encoder
     val DRIVE_GEAR_REDUCTION = 1.0     // This is < 1.0 if geared UP
@@ -95,29 +98,21 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     }
 
     fun turnByGyro(angle: Double) {
-        val Kp = org.firstinspires.ftc.robotcontroller.teamcode.Variables[Turn_Kp]
         val target = getHeading() - angle
         val startTime = timer.time()
-        do {
-            val err = target - getHeading()
-            val power = err * Kp
-            setPower(power, -power)
-        } while (abs(power) > 0.1 && (timer.time() - startTime) < 5)
-        resetPower()
-////        do {
-////            val err = target - getHeading()
-////            val power = turnPID.getPower(err)
-////            telemetry.addData("Error", err)
-////            telemetry.addData("Target", target)
-////            telemetry.addData("Power", power)
-////            turnByEncoder(power)
-////        } while (turnPID.isMoving())
-////        turnPID.createGraphs()
+        try {
+            do {
+                val err = getHeading() - target
+                val power = turnPID.getPower(err)
+                telemetry.update()
+                setPower(power, -power)
+            } while (turnPID.isMoving() && timer.time() - startTime < 5)
+        } finally {
+            turnPID.createGraphs()
+            resetPower()
+        }
     }
 
-    fun turnByEncoder(power: Double) {
-
-    }
 
     fun driveByPID(inches: Double) {
         val startHeading = getHeading()
@@ -128,7 +123,6 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         } while (drivePID.isMoving())
         turnCorrectionPID.createGraphs()
         drivePID.createGraphs()
-        resetPower()
     }
 
     fun driveByEncoder(speed: Double, inches: Double) {
@@ -140,7 +134,6 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         }
 
         while (motors.all { it.isBusy() }) {
-
             // Display it for the driver.
             telemetry.addData("Path1", "Running to ${inches}")
             motors.forEach {
@@ -159,10 +152,10 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     }
 
     fun setPower(left: Double, right: Double) {
-        frontLeftMotor.power = left
-        backLeftMotor.power = left
-        frontRightMotor.power = -right
-        backRightMotor.power = right
+        frontLeftMotor.power = -left
+        backLeftMotor.power = -left
+        frontRightMotor.power = right
+        backRightMotor.power = -right
     }
 
     fun setPower(power: Double) {

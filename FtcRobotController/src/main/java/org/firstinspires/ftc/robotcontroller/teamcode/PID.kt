@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
+import com.jjoe64.graphview.series.DataPoint
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.Graph
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity
-import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphSeries
-import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphType
+import org.firstinspires.ftc.robotcontroller.teamcode.activites.Series
+
 import kotlin.math.max
 import kotlin.math.min
 
@@ -15,21 +16,21 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
     val numberOfPoints get() = errorPoints.size
 
     val timer = ElapsedTime()
-    val errorPoints = ArrayList<Vector>()
-    val derivativePoints = ArrayList<Vector>()
-    val integralPoints = ArrayList<Vector>()
-    val powerPoints = ArrayList<Vector>()
-    val zeros = ArrayList<Vector>()
-    lateinit var aveErrorPoints: Array<Vector>
-    lateinit var aveDerPoints: Array<Vector>
-    lateinit var aveIntPoints: Array<Vector>
+    val errorPoints = ArrayList<DataPoint>()
+    val derivativePoints = ArrayList<DataPoint>()
+    val integralPoints = ArrayList<DataPoint>()
+    val powerPoints = ArrayList<DataPoint>()
+    val zeros = ArrayList<DataPoint>()
+    lateinit var aveErrorPoints: Array<DataPoint>
+    lateinit var aveDerPoints: Array<DataPoint>
+    lateinit var aveIntPoints: Array<DataPoint>
 
     val timeInterval = 0.05
 
-    fun averagedArray(array: Array<Vector>, num: Int): Array<Vector> {
-        return array.mapIndexed { index, vector ->
+    fun averagedArray(array: Array<DataPoint>, num: Int): Array<DataPoint> {
+        return array.mapIndexed { index, DataPoint ->
             val range = max(0, index - num) until min(array.size, index + num + 1)
-            Vector(vector.x, array.slice(range).sumByDouble { it.y } / (range.last - range.first))
+            DataPoint(DataPoint.x, array.slice(range).sumByDouble { it.y } / (range.last - range.first))
         }.toTypedArray()
     }
 
@@ -38,38 +39,38 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
 
         aveDerPoints = Array(numberOfPoints) {
             val x = aveErrorPoints[it].x
-            if (it == 0) return@Array Vector(x, 0.0)
+            if (it == 0) return@Array DataPoint(x, 0.0)
             val de = aveErrorPoints[it].y - aveErrorPoints[it - 1].y
             val dt = aveErrorPoints[it].x - aveErrorPoints[it - 1].x
             val y = de / dt
-            Vector(x, y)
+            DataPoint(x, y)
         }
 
         var intSum = 0.0
         aveIntPoints = Array(numberOfPoints) {
-            if (it == 0) return@Array Vector(aveErrorPoints[it].x, 0.0)
+            if (it == 0) return@Array DataPoint(aveErrorPoints[it].x, 0.0)
             val t = aveErrorPoints[it].x
             val pt = aveDerPoints[it - 1].x
             val dt = t - pt
             val e = aveErrorPoints[it].y
             intSum += e * dt
-            Vector(t, intSum)
+            DataPoint(t, intSum)
         }
 
-        GraphActivity.graphs +=
-                Graph("$name: Points",
-                        GraphSeries(errorPoints, "Error Points", GraphType.LineGraph),
-                        GraphSeries(derivativePoints, "Derivative Points", GraphType.LineGraph),
-                        GraphSeries(integralPoints, "Integral Points", GraphType.LineGraph),
-                                GraphSeries(powerPoints, "Power Points", GraphType.LineGraph)
+        GraphActivity.addGraphs(
+                Graph("$name: Error Points",
+                        Series(errorPoints, "Error Points"),
+                        Series(derivativePoints, "Derivative Points"),
+                        Series(integralPoints, "Integral Points"),
+                        Series(powerPoints, "Power Points")
+                ),
+                Graph("$name: Power Points", powerPoints),
+                Graph("$name: Averaged Points",
+                        Series(aveErrorPoints, "Error Points"),
+                        Series(aveDerPoints, "Derivative Points"),
+                        Series(aveIntPoints, "Integral Points")
                 )
-        GraphActivity.graphs +=
-                Graph("$name: Averaged Points}",
-                        GraphSeries(aveErrorPoints, "Averaged Error Points", GraphType.LineGraph),
-                        GraphSeries(aveDerPoints, "Derivative Points of Averaged Error Points", GraphType.LineGraph),
-                        GraphSeries(aveIntPoints, "Integral Points of Averaged Error Points", GraphType.LineGraph),
-                        GraphSeries(zeros, "Zeros", GraphType.PointGraph)
-                )
+        )
     }
 
     var prevError = 0.0
@@ -77,6 +78,7 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
     var error = 0.0
     var time = 0.0
     var errorIntegral = 0.0
+    var errorDerivative = 0.0
     fun reset() {
         errorPoints.clear()
         derivativePoints.clear()
@@ -93,20 +95,21 @@ class PID(val name: String, val Kp: Double, val Kd: Double, val Ki: Double) {
         time = timer.time()
         val dt = time - prevTime
         val de = error - prevError
-        val errorDerivative = de / dt
+        errorDerivative = de / dt
         errorIntegral += if (prevError != 0.0) (error + prevError) / 2.0 * dt else error * dt
         val power = error * Kp + errorDerivative * Kd + errorIntegral * Ki
-        errorPoints.add(Vector(time, error))
-        derivativePoints.add(Vector(time, errorDerivative))
-        integralPoints.add(Vector(time, errorIntegral))
-        powerPoints.add(Vector(time, power))
-
+        errorPoints.add(DataPoint(time, error))
+        derivativePoints.add(DataPoint(time, errorDerivative))
+        integralPoints.add(DataPoint(time, errorIntegral))
+        powerPoints.add(DataPoint(time, power))
         prevTime = time
         prevError = error
         return power
     }
 
-    fun isMoving() = powerPoints.subList(numberOfPoints - 10, numberOfPoints).any {it.y >= 0.15}
+    fun isMoving() =
+            if (numberOfPoints < 10) true
+            else powerPoints.subList(numberOfPoints - 10, numberOfPoints).any { it.y >= 0.15 }
 
     fun wait(seconds: Double) {
         val startTime = timer.time()

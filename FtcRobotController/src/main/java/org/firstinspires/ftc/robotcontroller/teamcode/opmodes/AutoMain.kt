@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.robotcontroller.teamcode.opmodes
 
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector.GoldLocation.LEFT
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector.GoldLocation.RIGHT
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
+import org.firstinspires.ftc.robotcontroller.teamcode.HardwareNames
 import org.firstinspires.ftc.robotcontroller.teamcode.Navigation
 import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
@@ -19,71 +19,57 @@ class AutoMain : LinearOpMode() {
 
     val autoType get() = vars[Auto_Type]
 
-    var detector: SamplingOrderDetector = FtcRobotControllerActivity.detector
+    val detector = FtcRobotControllerActivity.detector
 
     override fun runOpMode() {
-        detector.started = true;
+        detector.telemetry = telemetry
+        detector.enable()
         telemetry.addData("Status", "Init")
         waitForStart()
         telemetry.addData("Status", "Starting")
-//        telemetry.addData("Auto Type: ", autoType)
+        telemetry.addData("Auto Type: ", autoType)
         telemetry.update()
 
-        val onDepotSide = autoType == 0.0
+//        nav.moveElevator(1.0, vars[Elevator_Up_Time])
 
-        nav.moveElevator(1.0, vars[Elevator_Up_Time])
+        detector.started = true
 
-        nav.turnByGyro(-vars[Correction_Turn_Angle])
+//        nav.driveByTime(vars[Auto_Power], 0.3)
+//
+//        nav.moveElevator(-1.0, vars[Elevator_Down_Time])
+        nav.wait(0.3 + vars[Elevator_Down_Time])
 
-        when (detector.currentOrder) {
-            LEFT -> {
-                nav.turnByGyro(-vars[Left_Turn_Angle])
+        val order = detector.currentOrder
+
+        telemetry.addData("Order", order)
+        telemetry.addData("Left Certainty", detector.leftCertainty)
+        telemetry.addData("Center Certainty", detector.centerCertainty)
+        telemetry.addData("Right Certainty", detector.rightCertainty)
+        telemetry.update()
+
+        when (order) {
+            SamplingOrderDetector.GoldLocation.LEFT -> {
+                nav.turnByGyro(-vars[Turn_Angle])
             }
-            RIGHT -> {
-                nav.turnByGyro(vars[Right_Turn_Angle])
+            SamplingOrderDetector.GoldLocation.RIGHT -> {
+                nav.turnByGyro(vars[Turn_Angle])
             }
         }
 
         nav.driveByTime(vars[Auto_Power], vars[Drive_Time])
 
-        when (detector.currentOrder) {
-            LEFT -> {
-                nav.turnByGyro(vars[Left_Turn_Angle])
-                if (onDepotSide)
-                    nav.turnByGyro(vars[Right_Turn_Angle])
+        //nav.moveScoop(-1.0, vars[Scoop_Lowering_Time])
+
+        when (order) {
+            SamplingOrderDetector.GoldLocation.LEFT -> {
+                nav.turnByGyro(vars[Turn_Angle] * 2)
+                nav.driveByTime(vars[Auto_Power], vars[Drive_Time_2])
             }
-            RIGHT -> {
-                nav.turnByGyro(-vars[Right_Turn_Angle])
-                if (onDepotSide)
-                    nav.turnByGyro(-vars[Left_Turn_Angle])
+            SamplingOrderDetector.GoldLocation.RIGHT -> {
+                nav.turnByGyro(-vars[Turn_Angle] * 2)
+                nav.driveByTime(vars[Auto_Power], vars[Drive_Time_2])
             }
         }
-        if (onDepotSide) {
-            nav.driveByTime(vars[Auto_Power], vars[Drive_Time] / 2)
-            nav.moveScoop(-0.3, vars[Scoop_Lowering_Time])
-            nav.moveScoop(1.0, vars[Scoop_Raising_Time])
-        } else {
-            nav.driveByTime(vars[Auto_Power], vars[Drive_Time] / 4)
-        }
-
-
-//        when (autoType) {
-//            0.0 -> {
-//                nav.turnByGyro(vars[Right_Turn_Angle])
-//            }
-//            1.0 -> {
-//                nav.turnByGyro(vars[Left_Turn_Angle])
-//            }
-//            2.0 -> {
-//                nav.driveByTime(vars[Auto_Power], vars[Drive_Time])
-//            }
-//            3.0 -> {
-//
-//            }
-//            else -> {
-//                telemetry.addData("Status", "Invalid auto type")
-//                telemetry.update()
-//            }
-//        }
+        detector.reset()
     }
 }
