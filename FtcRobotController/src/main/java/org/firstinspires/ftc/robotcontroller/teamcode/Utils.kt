@@ -35,7 +35,3 @@ fun <T> createSpinner(context: Context, items: Array<T>, itemSelected: (view: Vi
 fun String.toast(context: Context) = Toast.makeText(context, this, Toast.LENGTH_LONG).show()
 
 fun Double.toRoundedString() = BigDecimal(this).round(mathContext).stripTrailingZeros().toPlainString()
-
-operator fun Telemetry?.plusAssign(data: String) {
-    this?.addData(data, "")
-}

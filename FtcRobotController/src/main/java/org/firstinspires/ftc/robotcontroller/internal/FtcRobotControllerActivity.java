@@ -64,7 +64,6 @@ import android.widget.TextView;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeControllerImpl;
@@ -104,7 +103,7 @@ import com.qualcomm.robotcore.wifi.NetworkType;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
-import org.firstinspires.ftc.robotcontroller.teamcode.OrderDetector;
+import org.firstinspires.ftc.robotcontroller.teamcode.GoldDetector;
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity;
@@ -145,7 +144,7 @@ public class FtcRobotControllerActivity extends Activity {
         // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    static public OrderDetector detector;
+    static public GoldDetector detector;
 
     public String getTag() {
         return TAG;
@@ -259,7 +258,7 @@ public class FtcRobotControllerActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Setup detector
-        detector = new OrderDetector(); // Create the detector
+        detector = new GoldDetector(); // Create the detector
         detector.init(this, CameraViewDisplay.getInstance()); // Initialize detector with app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
@@ -277,7 +276,7 @@ public class FtcRobotControllerActivity extends Activity {
         RobotLog.vv(TAG, "onCreate()");
         ThemedActivity.appAppThemeToActivity(getTag(), this); // do this way instead of inherit to help AppInventor
 
-        // Oddly, sometimes after a crash & restart the root activity will be something unexpected, like from the before crash? We don't yet understand
+        // Oddly, sometimes after a crash & reset the root activity will be something unexpected, like from the before crash? We don't yet understand
         RobotLog.vv(TAG, "rootActivity is of class %s", AppUtil.getInstance().getRootActivity().getClass().getSimpleName());
         Assert.assertTrue(FtcRobotControllerWatchdogService.isFtcRobotControllerActivity(AppUtil.getInstance().getRootActivity()));
         Assert.assertTrue(AppUtil.getInstance().isRobotController());
@@ -433,7 +432,7 @@ public class FtcRobotControllerActivity extends Activity {
         super.onStart();
         RobotLog.vv(TAG, "onStart()");
 
-        // If we're start()ing after a stop(), then shut the old robot down so
+        // If we're reset()ing after a stop(), then shut the old robot down so
         // we can refresh it with new state (e.g., with new hw configurations)
         shutdownRobot();
 

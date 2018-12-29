@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.teamcode.opmodes
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.robotcontroller.teamcode.Navigation
+import org.firstinspires.ftc.robotcontroller.teamcode.VariableName.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 
 
@@ -13,9 +14,6 @@ class AutoTest : LinearOpMode() {
     }
 
     override fun runOpMode() {
-        val servo = nav.mineralServo
-        servo.position = 0.0
-        nav.wait(0.5)
-        servo.position = 1.0
+        nav.driveByTime(vars[Auto_Power], 5.0)
     }
 }

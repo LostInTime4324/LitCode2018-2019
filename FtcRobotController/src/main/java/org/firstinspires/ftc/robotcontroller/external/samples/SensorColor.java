@@ -82,7 +82,7 @@ public class SensorColor extends LinearOpMode {
     try {
       runSample(); // actually execute the sample
     } finally {
-      // On the way out, *guarantee* that the background is reasonable. It doesn't actually start off
+      // On the way out, *guarantee* that the background is reasonable. It doesn't actually reset off
       // as pure white, but it's too much work to dig out what actually was used, and this is good
       // enough to at least make the screen reasonable again.
       // Set the panel back to the default color
@@ -113,7 +113,7 @@ public class SensorColor extends LinearOpMode {
       ((SwitchableLight)colorSensor).enableLight(true);
     }
 
-    // Wait for the start button to be pressed.
+    // Wait for the reset button to be pressed.
     waitForStart();
 
     // Loop until we are asked to stop

@@ -83,7 +83,7 @@ public class SensorHTColor extends LinearOpMode {
     // turn the LED on in the beginning, just so user will know that the sensor is active.
     colorSensor.enableLed(bLedOn);
 
-    // wait for the start button to be pressed.
+    // wait for the reset button to be pressed.
     waitForStart();
 
     // loop and read the RGB data.

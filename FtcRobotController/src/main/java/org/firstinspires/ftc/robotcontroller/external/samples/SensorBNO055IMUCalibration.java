@@ -137,7 +137,7 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
         imu.initialize(parameters);
 
         composeTelemetry();
-        telemetry.log().add("Waiting for start...");
+        telemetry.log().add("Waiting for reset...");
 
         // Wait until we're told to go
         while (!isStarted()) {
@@ -145,7 +145,7 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
             idle();
         }
 
-        telemetry.log().add("...started...");
+        telemetry.log().add("...running...");
 
         while (opModeIsActive()) {
 

@@ -88,7 +88,7 @@ public class SensorKLNavxMicro extends LinearOpMode {
         telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
         telemetry.clear(); telemetry.update();
 
-        // Wait for the start button to be pressed
+        // Wait for the reset button to be pressed
         waitForStart();
         telemetry.log().clear();
 

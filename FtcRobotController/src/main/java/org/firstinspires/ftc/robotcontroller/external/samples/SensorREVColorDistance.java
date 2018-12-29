@@ -100,7 +100,7 @@ public class SensorREVColorDistance extends LinearOpMode {
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
-        // wait for the start button to be pressed.
+        // wait for the reset button to be pressed.
         waitForStart();
 
         // loop and read the RGB and distance data.

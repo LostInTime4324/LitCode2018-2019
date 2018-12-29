@@ -60,7 +60,7 @@ public class SensorMRIrSeeker extends LinearOpMode {
     // get a reference to our GyroSensor object.
     irSeeker = hardwareMap.get(IrSeekerSensor.class, "sensor_ir");
 
-    // wait for the start button to be pressed.
+    // wait for the reset button to be pressed.
     waitForStart();
 
     while (opModeIsActive())  {

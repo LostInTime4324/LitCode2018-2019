@@ -16,18 +16,18 @@ object Variables {
     @JvmStatic
     fun init(context: Context) {
         preferences = context.getSharedPreferences(VARIABLE_PREFRENCES_TAG, MODE_PRIVATE)
-        VariableNames.values().forEach {
+        VariableName.values().forEach {
             put(it.name)
         }
     }
 
     @JvmStatic
-    operator fun get(variable: VariableNames): Double {
-        return values[variable.name]?.num ?: 0.0
-    }
+    operator fun get(variable: VariableName) = values[variable.name]?.num ?: variable.default
 
     fun put(name: String) {
-        val number = preferences.getString(name, "0.0")
+        val default = VariableName.valueOf(name).default.toString()
+        var number = preferences.getString(name, default)
+        if(number == "0.0") number = default
         values[name] = Variable(number.toDouble(), name)
     }
 

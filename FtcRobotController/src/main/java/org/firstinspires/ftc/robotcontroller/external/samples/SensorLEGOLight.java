@@ -67,7 +67,7 @@ public class SensorLEGOLight extends LinearOpMode {
     // Set the LED state in the beginning.
     lightSensor.enableLed(bLedOn);
 
-    // wait for the start button to be pressed.
+    // wait for the reset button to be pressed.
     waitForStart();
 
     // while the op mode is active, loop and read the light levels.

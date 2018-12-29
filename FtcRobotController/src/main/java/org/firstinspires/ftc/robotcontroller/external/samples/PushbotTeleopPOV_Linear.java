@@ -75,7 +75,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to reset (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)

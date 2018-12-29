@@ -1,22 +1,23 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
 import com.qualcomm.hardware.bosch.BNO055IMU
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareName.*
-import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Navigation.Orientation.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Navigation.ServoPosition.*
+import org.firstinspires.ftc.robotcontroller.teamcode.VariableName.*
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import kotlin.math.abs
+import kotlin.math.min
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 
 class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val timer = ElapsedTime()
 
     val mineralServo by lazy {
-        hardwareMap[MINERAL_SERVO] as Servo
+        hardwareMap[MINERAL_SERVO] as CRServo
     }
 
     val elevatorMotor by lazy {
@@ -27,10 +28,13 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         hardwareMap[ARM_MOTOR] as DcMotor
     }
 
+    val intakeMotor by lazy {
+        hardwareMap[INTAKE_MOTOR] as DcMotor
+    }
+
     val frontLeftMotor: DcMotor by lazy {
         hardwareMap[FRONT_LEFT_MOTOR] as DcMotor
     }
-
 
 //    val frontLeftPID = PID("Front Left", )
 
@@ -82,11 +86,26 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     val DRIVE_SPEED = 1
     val TURN_SPEED = 1
 
+    enum class ServoPosition {
+        CENTER,
+        RIGHT,
+        LEFT,
+        EMPTY
+    }
 
     fun getHeading() = imu.angularOrientation.firstAngle.toDouble()
 
+//    fun moveServo(position: ServoPosition) {
+//        when(position) {
+//            CENTER -> mineralServo.position = vars[Servo_Pos_Center] / 360
+//            RIGHT -> mineralServo.position = (vars[Servo_Pos_Center] + 45) / 360
+//            LEFT -> mineralServo.position = (vars[Servo_Pos_Center] - 45) / 360
+//            EMPTY -> mineralServo.position = (vars[Servo_Pos_Center] + 90) / 360
+//        }
+//    }
+
     fun moveElevator(power: Double, seconds: Double) {
-        elevatorMotor.power = power
+        elevatorMotor.power = -power
         wait(seconds)
         elevatorMotor.power = 0.0
     }
@@ -120,15 +139,16 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
     }
 
     fun driveByEncoder(speed: Double, inches: Double) {
-
         motors.forEach {
             it.targetPosition = it.currentPosition + (inches * COUNTS_PER_INCH).toInt()
             it.mode = DcMotor.RunMode.RUN_USING_ENCODER
             it.power = abs(speed)
         }
-
-        while (motors.all { it.isBusy() }) {
+        val heading = getHeading()
+        while (motors.all { it.isBusy }) {
             // Display it for the driver.
+            val correction = turnCorrectionPID.getPower(heading - getHeading())
+            addPower(correction, -correction)
             telemetry.addData("Path1", "Running to ${inches}")
             motors.forEach {
                 telemetry.addData("Path2", "Running at ${it.currentPosition}")
@@ -141,19 +161,57 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
 
     fun driveByTime(speed: Double, seconds: Double) {
         setPower(speed)
-        wait(seconds)
+        wait(seconds) {
+            telemetry.addData("Front Right Pos", frontRightMotor.currentPosition)
+            telemetry.addData("Back Right Pos", backRightMotor.currentPosition)
+            telemetry.addData("Front Left Pos", frontLeftMotor.currentPosition)
+            telemetry.addData("Back Left Pos", backLeftMotor.currentPosition)
+        }
         resetPower()
     }
 
+    fun addPower(frontLeft: Double, backLeft: Double, frontRight: Double, backRight: Double) {
+        frontLeftMotor.power += -frontLeft
+        backLeftMotor.power += -backLeft
+        frontRightMotor.power += frontRight
+        backRightMotor.power += backRight
+    }
+
+    fun addPower(left: Double, right: Double) {
+        addPower(left, left, right, right)
+    }
+
+    fun addPower(power: Double) {
+        addPower(power, power)
+    }
+
+    fun addPower(orientation: Orientation, power: Double) {
+        when(orientation) {
+            Horizontal -> addPower(power, -power, -power, power)
+            Vertical -> addPower(power)
+        }
+    }
+    
+    fun setPower(frontLeft: Double, backLeft: Double, frontRight: Double, backRight: Double) {
+        frontLeftMotor.power = -frontLeft
+        backLeftMotor.power = -backLeft
+        frontRightMotor.power = frontRight
+        backRightMotor.power = backRight
+    }
+
     fun setPower(left: Double, right: Double) {
-        frontLeftMotor.power = -left
-        backLeftMotor.power = -left
-        frontRightMotor.power = right
-        backRightMotor.power = -right
+        setPower(left, left, right, right)
     }
 
     fun setPower(power: Double) {
         setPower(power, power)
+    }
+
+    fun setPower(orientation: Orientation, power: Double) {
+        when(orientation) {
+            Horizontal -> setPower(power, -power, -power, power)
+            Vertical -> setPower(power)
+        }
     }
 
     fun resetPower() {
@@ -167,8 +225,21 @@ class Navigation(val hardwareMap: HardwareMap, val telemetry: Telemetry) {
         Horizontal
     }
 
-    fun wait(seconds: Double) {
+    fun wait(seconds: Double, logger: () -> Unit = {}) {
         val start = timer.time()
-        while (timer.time() - start < seconds);
+        while (timer.time() - start < seconds) {
+            logger()
+        }
+    }
+
+    fun setMode(mode: DcMotor.RunMode) {
+        frontLeftMotor.mode = mode
+        frontRightMotor.mode = mode
+        backLeftMotor.mode = mode
+        backRightMotor.mode = mode
+    }
+
+    fun setTargetPosition(target: Int) {
+        frontLeftMotor.targetPosition = target
     }
 }

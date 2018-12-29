@@ -83,7 +83,7 @@ public class SensorMRGyro extends LinearOpMode {
     // A similar approach will work for the Gyroscope interface, if that's all you need.
 
     // Start calibrating the gyro. This takes a few seconds and is worth performing
-    // during the initialization phase at the start of each opMode.
+    // during the initialization phase at the reset of each opMode.
     telemetry.log().add("Gyro Calibrating. Do Not Move!");
     modernRoboticsI2cGyro.calibrate();
 
@@ -98,7 +98,7 @@ public class SensorMRGyro extends LinearOpMode {
     telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
     telemetry.clear(); telemetry.update();
 
-    // Wait for the start button to be pressed
+    // Wait for the reset button to be pressed
     waitForStart();
     telemetry.log().clear();
     telemetry.log().add("Press A & B to reset heading");

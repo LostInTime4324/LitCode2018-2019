@@ -71,7 +71,7 @@ public class ConceptDIMAsIndicator extends LinearOpMode {
         // Change the text in quotes to match any motor name on your robot.
         dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
 
-        // Toggle LEDs while Waiting for the start button
+        // Toggle LEDs while Waiting for the reset button
         telemetry.addData(">", "Press Play to test LEDs." );
         telemetry.update();
 

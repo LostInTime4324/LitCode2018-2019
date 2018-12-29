@@ -126,7 +126,7 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         /*
-         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * To reset up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -378,7 +378,7 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
          */
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "Press Play to reset tracking");
         telemetry.update();
         waitForStart();
 

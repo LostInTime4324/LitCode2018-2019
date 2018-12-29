@@ -82,7 +82,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
     @Override public void runOpMode() {
 
         /*
-         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * To reset up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -127,7 +127,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        telemetry.addData(">", "Press Play to start");
+        telemetry.addData(">", "Press Play to reset");
         telemetry.update();
         waitForStart();
 

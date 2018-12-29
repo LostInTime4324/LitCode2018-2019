@@ -266,7 +266,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "Press Play to reset tracking");
         telemetry.update();
         waitForStart();
 

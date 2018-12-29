@@ -75,7 +75,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to reset (driver presses PLAY)
         waitForStart();
         runtime.reset();
 

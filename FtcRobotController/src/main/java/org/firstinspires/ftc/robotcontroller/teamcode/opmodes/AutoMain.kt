@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.robotcontroller.teamcode.opmodes
 
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
 import org.firstinspires.ftc.robotcontroller.teamcode.Navigation
-import org.firstinspires.ftc.robotcontroller.teamcode.VariableNames.*
+import org.firstinspires.ftc.robotcontroller.teamcode.VariableName.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 
 
@@ -23,19 +22,38 @@ class AutoMain : LinearOpMode() {
         detector.telemetry = telemetry
 
         detector.enable()
-        detector.start()
 
         waitForStart()
 
+//        nav.moveElevator(1.0, vars[Elevator_Up_Time])
+
+//        nav.driveByTime(vars[Auto_Power], 0.3)
+
+//        nav.moveElevator(-1.0, vars[Elevator_Up_Time])
+
+        detector.reset()
+
+        nav.wait(vars[Auto_Wait_Time])
+
+        detector.pause()
+
+        nav.turnByGyro(vars[Turn_Angle])
+
         detector.start()
 
+        nav.wait(vars[Auto_Wait_Time])
 
-        nav.moveElevator(1.0, vars[Elevator_Up_Time])
+        detector.pause()
 
-        nav.driveByTime(vars[Auto_Power], 0.3)
+        nav.turnByGyro(2 * -vars[Turn_Angle])
 
-        nav.moveElevator(-1.0, vars[Elevator_Down_Time])
-        nav.wait(0.3 + vars[Elevator_Down_Time])
+        detector.start()
+
+        nav.wait(vars[Auto_Wait_Time])
+
+        detector.pause()
+
+        nav.wait(10.0)
 
         val order = detector.currentOrder
 

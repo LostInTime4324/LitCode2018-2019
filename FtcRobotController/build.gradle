@@ -8,10 +8,10 @@ apply plugin: 'kotlin-android-extensions'
 android {
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 26
+        minSdkVersion 19
+        targetSdkVersion 19
     }
-    compileSdkVersion 26
+    compileSdkVersion 23
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -36,5 +36,5 @@ dependencies {
     }
     implementation project(':openCVLibrary343')
     implementation project(':DogeCV')
-    compile project(path: ':DogeCV')
+    implementation project(path: ':DogeCV')
 }

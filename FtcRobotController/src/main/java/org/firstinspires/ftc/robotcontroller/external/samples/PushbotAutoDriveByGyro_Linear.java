@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.Range;
  *  This code assumes that the robot is stationary when the INIT button is pressed.
  *  If this is not the case, then the INIT should be performed again.
  *
- *  Note: in this example, all angles are referenced to the initial coordinate frame set during the
+ *  Note: in this example, all angles are referenced to the default coordinate frame set during the
  *  the Gyro Calibration process, or whenever the program issues a resetZAxisIntegrator() call on the Gyro.
  *
  *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
@@ -126,7 +126,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Wait for the game to start (Display Gyro value), and reset gyro before we move..
+        // Wait for the game to reset (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
             telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
             telemetry.update();
@@ -192,7 +192,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // start motion.
+            // reset motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             robot.leftDrive.setPower(speed);
             robot.rightDrive.setPower(speed);

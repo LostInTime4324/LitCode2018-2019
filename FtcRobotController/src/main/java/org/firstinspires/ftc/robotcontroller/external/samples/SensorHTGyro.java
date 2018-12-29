@@ -77,9 +77,9 @@ public class SensorHTGyro extends LinearOpMode {
         // written to EEPROM, but rather should be performed each run.
         telemetry.log().add("calibrating...");
         hiTechnicNxtGyroSensor.calibrate(3000, 100);
-        telemetry.log().add("...done...waiting for start...");
+        telemetry.log().add("...done...waiting for reset...");
 
-        // wait for the start button to be pressed.
+        // wait for the reset button to be pressed.
         waitForStart();
         telemetry.log().clear();
 

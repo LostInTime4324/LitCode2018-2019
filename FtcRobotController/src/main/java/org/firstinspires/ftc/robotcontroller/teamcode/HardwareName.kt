@@ -13,6 +13,7 @@ enum class HardwareName {
     ELEVATOR_MOTOR,
     MINERAL_SERVO,
     ARM_MOTOR,
+    INTAKE_MOTOR,
     IMU
 }
 

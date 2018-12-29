@@ -68,7 +68,7 @@ public class ConceptRampMotorSpeed extends LinearOpMode {
         // Change the text in quotes to match any motor name on your robot.
         motor = hardwareMap.get(DcMotor.class, "left_drive");
 
-        // Wait for the start button
+        // Wait for the reset button
         telemetry.addData(">", "Press Start to run Motors." );
         telemetry.update();
         waitForStart();

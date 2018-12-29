@@ -83,7 +83,7 @@ public class ConceptTelemetry extends LinearOpMode  {
 
     @Override public void runOpMode() {
 
-        /* we keep track of how long it's been since the OpMode was started, just
+        /* we keep track of how long it's been since the OpMode was running, just
          * to have some interesting data to show */
         ElapsedTime opmodeRunTime = new ElapsedTime();
 
@@ -122,7 +122,7 @@ public class ConceptTelemetry extends LinearOpMode  {
             }
             });
 
-        // Reset to keep some timing stats for the post-'start' part of the opmode
+        // Reset to keep some timing stats for the post-'reset' part of the opmode
         opmodeRunTime.reset();
         int loopCount = 1;
 

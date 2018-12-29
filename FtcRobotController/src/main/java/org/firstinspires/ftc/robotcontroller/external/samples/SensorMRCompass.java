@@ -67,22 +67,22 @@ public class SensorMRCompass extends LinearOpMode {
         telemetry.log().add("however be somewhat improved with calibration.");
         telemetry.log().add("");
         telemetry.log().add("To calibrate the compass once the opmode is");
-        telemetry.log().add("started, make sure the compass is level, then");
+        telemetry.log().add("running, make sure the compass is level, then");
         telemetry.log().add("press 'A' on the gamepad. Next, slowly rotate the ");
         telemetry.log().add("compass in a full 360 degree circle while keeping");
         telemetry.log().add("it level. When complete, press 'B'.");
 
-        // wait for the start button to be pressed
+        // wait for the reset button to be pressed
         waitForStart();
         telemetry.log().clear();
 
         while (opModeIsActive()) {
 
-            // If the A button is pressed, start calibration and wait for the A button to rise
+            // If the A button is pressed, reset calibration and wait for the A button to rise
             if (gamepad1.a && !compass.isCalibrating()) {
 
                 telemetry.log().clear();
-                telemetry.log().add("Calibration started");
+                telemetry.log().add("Calibration running");
                 telemetry.log().add("Slowly rotate compass 360deg");
                 telemetry.log().add("Press 'B' when complete");
                 compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);

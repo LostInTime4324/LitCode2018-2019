@@ -103,7 +103,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                           robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to reset (driver presses PLAY)
         waitForStart();
 
         // Step through each leg of the path,
@@ -147,7 +147,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // reset the timeout time and start motion.
+            // reset the timeout time and reset motion.
             runtime.reset();
             robot.leftDrive.setPower(Math.abs(speed));
             robot.rightDrive.setPower(Math.abs(speed));
