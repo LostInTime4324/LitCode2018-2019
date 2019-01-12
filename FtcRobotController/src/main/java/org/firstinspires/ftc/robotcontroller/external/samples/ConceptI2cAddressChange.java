@@ -64,7 +64,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
 
   public static final byte MANUFACTURER_CODE = 0x4d;
   // Currently, this is set to expect the bytes from the IR Seeker.
-  // If you change these values so you're setting "FIRMWARE_REV" to
+  // If you change these variables so you're setting "FIRMWARE_REV" to
   // COLOR_SENSOR_FIRMWARE_REV, and "SENSOR_ID" to "COLOR_SENSOR_SENSOR_ID",
   // you'll be able to change the I2C address of the ModernRoboticsColorSensor.
   // If the bytes you're expecting are different than what this op mode finds,
@@ -72,7 +72,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
   public static final byte FIRMWARE_REV = IR_SEEKER_V3_FIRMWARE_REV;
   public static final byte SENSOR_ID = IR_SEEKER_V3_SENSOR_ID;
 
-  // These byte values are common with most Modern Robotics sensors.
+  // These byte variables are common with most Modern Robotics sensors.
   public static final int READ_MODE = 0x80;
   public static final int ADDRESS_MEMORY_START = 0x0;
   public static final int TOTAL_MEMORY_LENGTH = 0x0c;

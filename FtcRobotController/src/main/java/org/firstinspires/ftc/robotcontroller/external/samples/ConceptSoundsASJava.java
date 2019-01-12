@@ -91,7 +91,7 @@ public class ConceptSoundsASJava extends LinearOpMode {
         int goldSoundID   = hardwareMap.appContext.getResources().getIdentifier("gold",   "raw", hardwareMap.appContext.getPackageName());
 
         // Determine if sound resources are found.
-        // Note: Preloading is NOT required, but it's a good way to verify all your sounds are available before you run.
+        // Note: Preloading is NOT required, but it's a good way to verify all your sounds are available before you unpause.
         if (goldSoundID != 0)
             goldFound   = SoundPlayer.getInstance().preload(hardwareMap.appContext, goldSoundID);
 
@@ -102,7 +102,7 @@ public class ConceptSoundsASJava extends LinearOpMode {
         telemetry.addData("gold resource",   goldFound ?   "Found" : "NOT found\n Add gold.wav to /src/main/res/raw" );
         telemetry.addData("silver resource", silverFound ? "Found" : "Not found\n Add silver.wav to /src/main/res/raw" );
 
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to unpause (driver presses PLAY)
         telemetry.addData(">", "Press Start to continue");
         telemetry.update();
         waitForStart();
@@ -110,7 +110,7 @@ public class ConceptSoundsASJava extends LinearOpMode {
         telemetry.addData(">", "Press X, B to play sounds.");
         telemetry.update();
 
-        // run until the end of the match (driver presses STOP)
+        // unpause until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             // say Silver each time gamepad X is pressed (This sound is a resource)

@@ -88,11 +88,11 @@ public class SensorREVColorDistance extends LinearOpMode {
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
 
-        // values is a reference to the hsvValues array.
+        // variables is a reference to the hsvValues array.
         final float values[] = hsvValues;
 
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
+        // sometimes it helps to multiply the raw RGB variables with a scale factor
+        // to amplify/attentuate the measured variables.
         final double SCALE_FACTOR = 255;
 
         // get a reference to the RelativeLayout so we can change the background
@@ -106,7 +106,7 @@ public class SensorREVColorDistance extends LinearOpMode {
         // loop and read the RGB and distance data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
-            // convert the RGB values to HSV values.
+            // convert the RGB variables to HSV variables.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
             Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),

@@ -125,12 +125,12 @@ public class SensorMRCompass extends LinearOpMode {
         } else {
 
             // getDirection() returns a traditional compass heading in the range [0,360),
-            // with values increasing in a CW direction
+            // with variables increasing in a CW direction
             telemetry.addData("heading", "%.1f", compass.getDirection());
 
             // getAcceleration() returns the current 3D acceleration experienced by
             // the sensor. This is used internally to the sensor to compute its tilt and thence
-            // to correct the magnetometer reading to produce tilt-corrected values in getDirection()
+            // to correct the magnetometer reading to produce tilt-corrected variables in getDirection()
             Acceleration accel = compass.getAcceleration();
             double accelMagnitude = Math.sqrt(accel.xAccel*accel.xAccel + accel.yAccel*accel.yAccel + accel.zAccel*accel.zAccel);
             telemetry.addData("accel", accel);

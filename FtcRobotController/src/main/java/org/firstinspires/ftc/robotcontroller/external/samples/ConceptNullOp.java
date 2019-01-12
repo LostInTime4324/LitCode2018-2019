@@ -52,7 +52,7 @@ public class ConceptNullOp extends OpMode {
   }
 
   /*
-     * Code to run when the op mode is first enabled goes here
+     * Code to unpause when the op mode is first enabled goes here
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#reset()
      */
   @Override

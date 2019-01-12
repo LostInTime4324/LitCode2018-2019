@@ -45,8 +45,8 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  *   instead of the LEGO sensor.  Chose to use one sensor or the other.
  *
  *   Setting the correct WHITE_THRESHOLD value is key to stopping correctly.
- *   This should be set half way between the light and dark values.
- *   These values can be read on the screen once the OpMode has been INIT, but before it is STARTED.
+ *   This should be set half way between the light and dark variables.
+ *   These variables can be read on the screen once the OpMode has been INIT, but before it is STARTED.
  *   Move the senso on asnd off the white line and not the min and max readings.
  *   Edit this code to make WHITE_THRESHOLD half way between the min and max.
  *
@@ -86,7 +86,7 @@ public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
         lightSensor.enableLed(true);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("Status", "Ready to unpause");    //
         telemetry.update();
 
         // Wait for the game to reset (driver presses PLAY)
@@ -103,7 +103,7 @@ public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
         robot.leftDrive.setPower(APPROACH_SPEED);
         robot.rightDrive.setPower(APPROACH_SPEED);
 
-        // run until the white line is seen OR the driver presses STOP;
+        // unpause until the white line is seen OR the driver presses STOP;
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
 
             // Display the light level while we are looking for the line

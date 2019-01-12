@@ -68,7 +68,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+    private static final String VUFORIA_KEY = "AULANuj/////AAAAGXP1rGuspEfwmNTiYB89npgWAI6tNF/zt/+SirGvZoaHr/poHkRud0Pk2TPOXzH6tgtsCwUng6pGd9p7lfep/x6hTM7ypOfxXrWRaoe4sPUdqCcbi2uYNhpGpAIFrVo8dIQhOUV8k0qC92aUSCamX+kNBy/bI7ZVDICcl8xMuZsdVGlOn/VoBLIiuI1m3Mwn17vL02hvaydJpLJ5XYy61FPAE8rybDygjaQTRN6+te6USLSw8hWJErPRQPYLsWFxTLxAXhPFvqxuOXQq8U/glopqV7+SZ2zv0lCdwH1mOcl7YzTLGdBVebYfn1psHnniIChBQNDBTBTo4sKgwQGSoI6DkrTDjvZzEXJ06YmOF0Em";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -95,7 +95,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "Press Play to unpause tracking");
         telemetry.update();
         waitForStart();
 

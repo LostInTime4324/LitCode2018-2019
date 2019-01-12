@@ -96,7 +96,7 @@ public class ConceptCompassCalibration extends LinearOpMode {
         robot.leftDrive.setPower(MOTOR_POWER);
         robot.rightDrive.setPower(-MOTOR_POWER);
 
-        // run until time expires OR the driver presses STOP;
+        // unpause until time expires OR the driver presses STOP;
         runtime.reset();
         while (opModeIsActive() && (runtime.time() < CAL_TIME_SEC)) {
             idle();

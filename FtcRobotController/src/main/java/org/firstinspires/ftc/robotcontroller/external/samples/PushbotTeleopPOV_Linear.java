@@ -77,7 +77,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
         // Wait for the game to reset (driver presses PLAY)
         waitForStart();
 
-        // run until the end of the match (driver presses STOP)
+        // unpause until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -90,7 +90,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             left  = drive + turn;
             right = drive - turn;
 
-            // Normalize the values so neither exceed +/- 1.0
+            // Normalize the variables so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
             if (max > 1.0)
             {

@@ -17,14 +17,14 @@ import org.firstinspires.ftc.robotcontroller.teamcode.toast
 
 class VariableControlActivity : Activity() {
 
-    val TAG = "Variables"
+    val TAG = "Var"
 
     val preferences by lazy {
         getSharedPreferences(Variables.VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
     }
 
-    var selectedVariable: Variable? = null
-    var savedVariableValue: Double? = null
+    var selectedVariable: String? = null
+    var savedNumber: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,16 +34,16 @@ class VariableControlActivity : Activity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         resetButton.setOnClickListener {
-            selectedVariable!!.num = savedVariableValue!!
+            Variables[selectedVariable!!] = savedNumber!!
         }
 
         saveButton.setOnClickListener {
-            savedVariableValue = selectedVariable!!.num
+            savedNumber = Variables[selectedVariable!!]
             updatePreferences()
         }
 
-        Variables.values.asIterable().forEachIndexed { index, variable ->
-            val field = NumberField(variable.key, variable.value)
+        Variables.variables.entries.forEachIndexed { index, (name, number) ->
+            val field = NumberField(name, number)
             var params = GridLayout.LayoutParams(GridLayout.spec(index), GridLayout.spec(0)).also { it.marginStart = 50 }
             field.nameText.layoutParams = params
             params = GridLayout.LayoutParams(GridLayout.spec(index), GridLayout.spec(1)).also { it.marginStart = 50 }
@@ -59,30 +59,30 @@ class VariableControlActivity : Activity() {
     }
 
     fun updatePreferences() {
-        Variables.values.forEach {
-            preferences.edit().putString(it.key, it.value.num.toString()).apply()
+        Variables.variables.forEach {(name, number) ->
+            preferences.edit().putString(name, number.toString()).apply()
         }
     }
 
     val context = this
 
-    inner class NumberField(val name: String, val variable: Variable) {
+    inner class NumberField(val name: String, var number: Double) {
         val numberText = EditText(context).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            setText(variable.num.toRoundedString())
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+            setText(number.toRoundedString())
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
-                    selectedVariable = variable
-                    savedVariableValue = variable.num
+                    selectedVariable = name
+                    savedNumber = number
                 }
             }
 
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(number: Editable?) {
+                override fun afterTextChanged(numberText: Editable?) {
                     try {
-                        variable.num = number.toString().toDouble()
+                        number = numberText.toString().toDouble()
                     } catch (e: Exception) {
                         "Not a number".toast(context)
                     }

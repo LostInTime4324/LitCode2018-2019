@@ -104,7 +104,6 @@ import com.qualcomm.robotcore.wifi.NetworkType;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
-import org.firstinspires.ftc.robotcontroller.teamcode.GoldDetector;
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity;
@@ -144,8 +143,6 @@ public class FtcRobotControllerActivity extends Activity {
         }
         // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
-
-    static public GoldDetector detector;
 
     public String getTag() {
         return TAG;
@@ -257,21 +254,6 @@ public class FtcRobotControllerActivity extends Activity {
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // Setup detector
-        detector = new GoldDetector(); // Create the detector
-        detector.init(this, CameraViewDisplay.getInstance()); // Initialize detector with app context and camera
-        detector.useDefaults(); // Set detector to use default settings
-
-        detector.downscale = 0.4; // How much to downscale the input frames
-
-        // Optional tuning
-        detector.setAreaScoringMethod(DogeCV.AreaScoringMethod.MAX_AREA); // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-        detector.getMaxAreaScorer().weight = 0.001;
-
-        detector.getRatioScorer().weight = 15.0;
-        detector.getRatioScorer().perfectRatio = 1.0;
 
         RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
         RobotLog.vv(TAG, "onCreate()");
@@ -406,9 +388,9 @@ public class FtcRobotControllerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if(checked) {
-                    detector.disable();
+
                 } else {
-                    detector.enable();
+
                 }
                 checked = !checked;
             }

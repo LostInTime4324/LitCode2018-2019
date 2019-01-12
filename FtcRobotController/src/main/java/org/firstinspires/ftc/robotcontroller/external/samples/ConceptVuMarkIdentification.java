@@ -137,7 +137,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
 
             /**
              * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
+             * {@link RelicRecoveryVuMark} is an enum which can have the following variables:
              * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */

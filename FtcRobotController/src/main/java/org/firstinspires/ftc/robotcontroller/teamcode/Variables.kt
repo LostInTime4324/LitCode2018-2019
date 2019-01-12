@@ -2,28 +2,36 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 
 import android.content.Context
 import android.content.SharedPreferences
+import java.util.*
 
 object Variables {
     const val VARIABLE_PREFRENCES_TAG = "Variables"
 
     val variables = LinkedHashMap<String, Double>()
 
-    lateinit var preferences: SharedPreferences
+    val enums = LinkedHashMap<String, Enum<*>>()
 
-    val enums = LinkedHashMap
+    lateinit var preferences: SharedPreferences
 
     @JvmStatic
     fun init(context: Context) {
         preferences = context.getSharedPreferences(VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
-        Numbers.values().forEach {
+        Number.values().forEach {
             put(it.name)
         }
+        Variables::class.java.classes.filter { it !is Number }.forEach { enumClass ->
+            enumClass.enumConstants.map { (it as Enum<*>).name }.forEach {
 
-
+            }
+        }
     }
 
     @JvmStatic
-    operator fun get(name: String) = variables[name] ?: Numbers.valueOf(name).default
+    operator fun get(name: String) = variables[name] ?: Number.valueOf(name).default
+
+    operator fun <T: Enum<T>> get(enum: Enum<T>) {
+
+    }
 
     @JvmStatic
     operator fun set(name: String, number: Double) {
@@ -31,7 +39,7 @@ object Variables {
     }
 
     fun put(name: String) {
-        val default = Numbers.valueOf(name).default.toString()
+        val default = Number.valueOf(name).default.toString()
         val number = if (preferences.contains(name))
             preferences.getString(name, default)
         else
@@ -45,7 +53,7 @@ object Variables {
 
     }
 
-    enum class Numbers(val default: Double = 0.0) {
+    enum class Number(val default: Double = 0.0) {
         On_Depot_Side(1.0),
         Do_Both_Objectives(0.0),
         Using_Elevator(1.0),

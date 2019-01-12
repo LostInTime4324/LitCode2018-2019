@@ -86,7 +86,7 @@ public class ConceptSoundsOnBotJava extends LinearOpMode {
         telemetry.addData("gold sound",   goldFound ?   "Found" : "NOT Found \nCopy gold.wav to " + soundPath  );
         telemetry.addData("silver sound", silverFound ? "Found" : "NOT Found \nCopy silver.wav to " + soundPath );
 
-        // Wait for the game to start (driver presses PLAY)
+        // Wait for the game to unpause (driver presses PLAY)
         telemetry.addData(">", "Press Start to continue");
         telemetry.update();
         waitForStart();
@@ -94,7 +94,7 @@ public class ConceptSoundsOnBotJava extends LinearOpMode {
         telemetry.addData(">", "Press X or B to play sounds.");
         telemetry.update();
 
-        // run until the end of the match (driver presses STOP)
+        // unpause until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             // say Silver each time gamepad X is pressed (This sound is a resource)

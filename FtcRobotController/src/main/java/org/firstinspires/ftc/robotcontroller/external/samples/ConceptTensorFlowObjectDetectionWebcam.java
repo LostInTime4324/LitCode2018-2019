@@ -95,7 +95,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         }
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "Press Play to unpause tracking");
         telemetry.update();
         waitForStart();
 

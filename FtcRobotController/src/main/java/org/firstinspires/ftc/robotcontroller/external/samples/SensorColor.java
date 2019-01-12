@@ -96,7 +96,7 @@ public class SensorColor extends LinearOpMode {
 
   protected void runSample() throws InterruptedException {
 
-    // values is a reference to the hsvValues array.
+    // variables is a reference to the hsvValues array.
     float[] hsvValues = new float[3];
     final float values[] = hsvValues;
 
@@ -137,7 +137,7 @@ public class SensorColor extends LinearOpMode {
       NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
       /** Use telemetry to display feedback on the driver station. We show the conversion
-       * of the colors to hue, saturation and value, and display the the normalized values
+       * of the colors to hue, saturation and value, and display the the normalized variables
        * as returned from the sensor.
        * @see <a href="http://infohost.nmt.edu/tcc/help/pubs/colortheory/web/hsv.html">HSV</a>*/
 
@@ -161,12 +161,12 @@ public class SensorColor extends LinearOpMode {
               .addData("g", "%02x", Color.green(color))
               .addData("b", "%02x", Color.blue(color));
 
-      // Balance the colors. The values returned by getColors() are normalized relative to the
-      // maximum possible values that the sensor can measure. For example, a sensor might in a
+      // Balance the colors. The variables returned by getColors() are normalized relative to the
+      // maximum possible variables that the sensor can measure. For example, a sensor might in a
       // particular configuration be able to internally measure color intensity in a range of
-      // [0, 10240]. In such a case, the values returned by getColors() will be divided by 10240
+      // [0, 10240]. In such a case, the variables returned by getColors() will be divided by 10240
       // so as to return a value it the range [0,1]. However, and this is the point, even so, the
-      // values we see here may not get close to 1.0 in, e.g., low light conditions where the
+      // variables we see here may not get close to 1.0 in, e.g., low light conditions where the
       // sensor measurements don't approach their maximum limit. In such situations, the *relative*
       // intensities of the colors are likely what is most interesting. Here, for example, we boost
       // the signal on the colors while maintaining their relative balance so as to give more
@@ -184,7 +184,7 @@ public class SensorColor extends LinearOpMode {
               .addData("b", "%02x", Color.blue(color));
       telemetry.update();
 
-      // convert the RGB values to HSV values.
+      // convert the RGB variables to HSV variables.
       Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), hsvValues);
 
       // change the background color to match the color detected by the RGB sensor.

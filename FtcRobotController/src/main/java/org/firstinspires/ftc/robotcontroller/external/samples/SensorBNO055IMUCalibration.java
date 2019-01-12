@@ -54,7 +54,7 @@ import java.util.Locale;
  * (which is not used by the default {@link BNO055IMU.SensorMode#IMU
  * SensorMode#IMU}), the BNO055 is internally self-calibrating and thus can be very successfully
  * used without manual intervention. That said, performing a one-time calibration, saving the
- * results persistently, then loading them again at each run can help reduce the time that automatic
+ * results persistently, then loading them again at each unpause can help reduce the time that automatic
  * calibration requires.</p>
  *
  * <p>This summary of the calibration process, from <a href="http://iotdk.intel.com/docs/master/upm/classupm_1_1_b_n_o055.html">
@@ -66,8 +66,8 @@ import java.util.Locale;
  *
  * <p>There is a calibration status register available [...] that returns the calibration status
  * of the accelerometer (ACC), magnetometer (MAG), gyroscope (GYR), and overall system (SYS).
- * Each of these values range from 0 (uncalibrated) to 3 (fully calibrated). Calibration [ideally]
- * involves certain motions to get all 4 values at 3. The motions are as follows (though see the
+ * Each of these variables range from 0 (uncalibrated) to 3 (fully calibrated). Calibration [ideally]
+ * involves certain motions to get all 4 variables at 3. The motions are as follows (though see the
  * datasheet for more information):</p>
  *
  * <li>
@@ -77,12 +77,12 @@ import java.util.Locale;
  *              hold, etc. 6 or more movements of this type may be required. You can move through
  *              any axis you desire, but make sure that the device is lying at least once
  *              perpendicular to the x, y, and z axis.</ol>
- *     <ol>MAG: Move slowly in a figure 8 pattern in the air, until the calibration values reaches 3.</ol>
+ *     <ol>MAG: Move slowly in a figure 8 pattern in the air, until the calibration variables reaches 3.</ol>
  *     <ol>SYS: This will usually reach 3 when the other items have also reached 3. If not, continue
  *              slowly moving the device though various axes until it does."</ol>
  * </li>
  *
- * <p>To calibrate the IMU, run this sample opmode with a gamepad attached to the driver station.
+ * <p>To calibrate the IMU, unpause this sample opmode with a gamepad attached to the driver station.
  * Once the IMU has reached sufficient calibration as reported on telemetry, press the 'A'
  * button on the gamepad to write the calibration to a file. That file can then be indicated
  * later when running an opmode which uses the IMU.</p>
