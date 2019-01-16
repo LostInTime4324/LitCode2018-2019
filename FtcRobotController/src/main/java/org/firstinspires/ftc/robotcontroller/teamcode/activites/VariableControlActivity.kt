@@ -10,14 +10,13 @@ import android.view.WindowManager
 import android.widget.*
 import com.qualcomm.ftcrobotcontroller.R
 import kotlinx.android.synthetic.main.activity_variable_control.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Variable
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables
+import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.VariableEnums
+import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.VariableEnums.*
 import org.firstinspires.ftc.robotcontroller.teamcode.toRoundedString
 import org.firstinspires.ftc.robotcontroller.teamcode.toast
 
 class VariableControlActivity : Activity() {
-
-    val TAG = "Var"
 
     val preferences by lazy {
         getSharedPreferences(Variables.VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
@@ -51,6 +50,9 @@ class VariableControlActivity : Activity() {
             variableControlLayout.addView(field.nameText)
             variableControlLayout.addView(field.numberText)
         }
+
+
+        Variables.enums.toList().forEachIndexed { index, () }
     }
 
     override fun onPause() {
@@ -92,6 +94,11 @@ class VariableControlActivity : Activity() {
 
         val nameText = TextView(context).apply {
             text = name.replace("_", " ")
+        }
+    }
+    inner class EnumField<T: Enum<T>>(name: String, enum: Enum<T>) {
+        val spinner = Spinner(context).apply {
+
         }
     }
 }
