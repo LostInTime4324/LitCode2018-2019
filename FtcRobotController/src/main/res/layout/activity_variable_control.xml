@@ -16,7 +16,8 @@
             android:id="@+id/variableControlLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2">
+            android:layout_margin="15dp"
+            android:columnCount="4">
 
         </GridLayout>
     </ScrollView>

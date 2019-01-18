@@ -3,8 +3,6 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.VariableEnums
-import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.VariableEnums.*
 import java.util.*
 
 object Variables {
@@ -12,35 +10,34 @@ object Variables {
 
     val variables = LinkedHashMap<String, Double>()
 
-    val enumMap = LinkedHashMap<Class<*>, Enum<*>>()
+    operator fun get(numberVariable: NumberVariable) = variables[numberVariable.name] ?: numberVariable.default
 
-    val enumClasses = VariableEnums::class.java.classes.filter { it !is Number && it is Enum<*>}.forEach { enumClass ->
-        enumMap[enumClass] = enumClass.enumConstants.first() as Enum<*>
+    object vars {
+        inline operator fun get(numberVariable: NumberVariable) = variables[numberVariable.name] ?: numberVariable.default
     }
 
+    val enumMap = LinkedHashMap<Class<*>, Enum<*>>()
     object enums {
-        inline operator fun <reified T: Enum<T>> invoke() = enumMap[T::class.java]
+        inline operator fun <reified T: Enum<T>> invoke(): Enum<*> = enumMap[T::class.java]!! as Enum<T>
+
     }
 
     lateinit var preferences: SharedPreferences
 
+
+
     @JvmStatic
     fun init(context: Context) {
         preferences = context.getSharedPreferences(VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
-        Variable.values().forEach {
+        NumberVariable.values().forEach {
             put(it.name)
         }
-        enums<VariableEnums.AutoType>()
+        EnumVariable::class.java.classes.filter { it is Enum<*>}.forEach { enumClass ->
+            enumMap[enumClass] = enumClass.enumConstants!!.first() as Enum<*>
+        }
         Log.i(VARIABLE_PREFRENCES_TAG, enumMap.toList().joinToString { (key, value) ->
             "Key: $key Value: $value\n"
         })
-    }
-
-    @JvmStatic
-    operator fun get(name: String) = variables[name] ?: Variable.valueOf(name).default
-
-    operator fun <T: Enum<T>> get(enum: Enum<T>) {
-
     }
 
     @JvmStatic
@@ -49,13 +46,12 @@ object Variables {
     }
 
     fun put(name: String) {
-        val default = Variable.valueOf(name).default.toString()
+        val default = NumberVariable.valueOf(name).default.toString()
         val number = if (preferences.contains(name))
             preferences.getString(name, default)
         else
             default
         variables[name] = number.toDouble()
-//        java.lang.Enum.valueOf()
     }
 
 

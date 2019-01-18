@@ -7,14 +7,12 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.WindowManager
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
 import com.qualcomm.ftcrobotcontroller.R
 import kotlinx.android.synthetic.main.activity_variable_control.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables
-import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.VariableEnums
-import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.VariableEnums.*
-import org.firstinspires.ftc.robotcontroller.teamcode.toRoundedString
-import org.firstinspires.ftc.robotcontroller.teamcode.toast
+import org.firstinspires.ftc.robotcontroller.teamcode.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables.enumMap
 
 class VariableControlActivity : Activity() {
 
@@ -22,7 +20,7 @@ class VariableControlActivity : Activity() {
         getSharedPreferences(Variables.VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
     }
 
-    var selectedVariable: String? = null
+    var selectedVariable: NumberVariable? = null
     var savedNumber: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,18 +39,15 @@ class VariableControlActivity : Activity() {
             updatePreferences()
         }
 
-        Variables.variables.entries.forEachIndexed { index, (name, number) ->
-            val field = NumberField(name, number)
-            var params = GridLayout.LayoutParams(GridLayout.spec(index), GridLayout.spec(0)).also { it.marginStart = 50 }
-            field.nameText.layoutParams = params
-            params = GridLayout.LayoutParams(GridLayout.spec(index), GridLayout.spec(1)).also { it.marginStart = 50 }
-            field.numberText.layoutParams = params
-            variableControlLayout.addView(field.nameText)
-            variableControlLayout.addView(field.numberText)
+        Variables.variables.entries.forEachIndexed { row, (name, number) ->
+            NumberField(name, number, row)
         }
 
 
-        Variables.enums.toList().forEachIndexed { index, () }
+
+        Variables.enumMap.toList().forEachIndexed { row, (enumClass, enum) ->
+            EnumField(enumClass, enum, row)
+        }
     }
 
     override fun onPause() {
@@ -61,14 +56,18 @@ class VariableControlActivity : Activity() {
     }
 
     fun updatePreferences() {
-        Variables.variables.forEach {(name, number) ->
+        Variables.variables.forEach { (name, number) ->
             preferences.edit().putString(name, number.toString()).apply()
         }
     }
 
     val context = this
 
-    inner class NumberField(val name: String, var number: Double) {
+    inner class NumberField(val name: String, var number: Double, row: Int) {
+        val nameText = TextView(context).apply {
+            text = name.replace("_", " ")
+        }
+
         val numberText = EditText(context).apply {
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
             setText(number.toRoundedString())
@@ -92,13 +91,26 @@ class VariableControlActivity : Activity() {
             })
         }
 
-        val nameText = TextView(context).apply {
-            text = name.replace("_", " ")
+        init {
+            variableControlLayout.addView(nameText, createGridParams(row, 0))
+            variableControlLayout.addView(numberText, createGridParams(row, 1))
         }
     }
-    inner class EnumField<T: Enum<T>>(name: String, enum: Enum<T>) {
-        val spinner = Spinner(context).apply {
 
+    inner class EnumField(enumClass: Class<*>, enum: Enum<*>, row: Int) {
+        val enums = enumClass.enumConstants!!.map { (it as Enum<*>) }
+
+        val nameText = TextView(context).apply {
+            text = enumClass.simpleName.replace("_", " ")
+        }
+
+        val spinner = createSpinner(context, enums.map { it.name }, enum) { view, position ->
+            enumMap[enumClass] = enums[position]
+        }
+
+        init {
+            variableControlLayout.addView(nameText, createGridParams(row, 3))
+            variableControlLayout.addView(spinner, createGridParams(row, 4))
         }
     }
 }

@@ -3,16 +3,17 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.*
+import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode.*
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.*
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareName.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Navigation.Orientation.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables.*
+import org.firstinspires.ftc.robotcontroller.teamcode.NumberVariable.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables.vars
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
 import kotlin.math.sign
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
 
 open class Navigation(opMode: OpMode) {
     val hardwareMap = opMode.hardwareMap
@@ -252,7 +253,6 @@ class LinearNavigation(val opMode: LinearOpMode) : Navigation(opMode) {
     }
 
     fun driveByTime(seconds: Double, speed: Double = vars[Drive_Power]) {
-
         wait(seconds) {
             setPower(speed * seconds.sign)
         }
