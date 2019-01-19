@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -42,9 +42,9 @@ import com.qualcomm.robotcore.util.Range;
  * This OpMode executes a basic Tank Drive Teleop for a two wheeled robot using two REV SPARK Minis.
  * To use this example, connect two REV SPARK Minis into servo ports on the Expansion Hub. On the
  * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
- * and name them 'left_drive' and 'right_drive'.
+ * and variable them 'left_drive' and 'right_drive'.
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
@@ -62,7 +62,7 @@ public class ConceptRevSPARKMini extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
+        // Initialize the hardware numbers. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotorSimple.class, "left_drive");

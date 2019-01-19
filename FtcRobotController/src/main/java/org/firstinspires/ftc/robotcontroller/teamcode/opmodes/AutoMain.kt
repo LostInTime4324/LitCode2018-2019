@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.robotcontroller.teamcode.GoldDetector
 import org.firstinspires.ftc.robotcontroller.teamcode.GoldDetector.GoldLocation.*
 import org.firstinspires.ftc.robotcontroller.teamcode.LinearNavigation
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables.Number.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
+import org.firstinspires.ftc.robotcontroller.teamcode.NumberVariable.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables.vars
 
 
 @Autonomous(name = "AutoMain")

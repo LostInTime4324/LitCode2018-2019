@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -45,7 +45,7 @@ import com.qualcomm.robotcore.util.Range;
  * The code REQUIRES that you DO have encoders on the wheels,
  *   otherwise you would use: PushbotAutoDriveByTime;
  *
- *  This code ALSO requires that you have a Modern Robotics I2C gyro with the name "gyro"
+ *  This code ALSO requires that you have a Modern Robotics I2C gyro with the variable "gyro"
  *   otherwise you would use: PushbotAutoDriveByEncoder;
  *
  *  This code requires that the drive Motors have been configured such that a positive
@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.Range;
  *  This is consistent with the FTC field coordinate conventions set out in the document:
  *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
@@ -98,7 +98,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     public void runOpMode() {
 
         /*
-         * Initialize the standard drive system variables.
+         * Initialize the standard drive system numbers.
          * The init() method of the hardware class does most of the work here
          */
         robot.init(hardwareMap);

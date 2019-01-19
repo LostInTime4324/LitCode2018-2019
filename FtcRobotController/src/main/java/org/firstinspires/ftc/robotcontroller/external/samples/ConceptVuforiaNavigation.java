@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -73,7 +73,7 @@ import java.util.List;
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
@@ -152,8 +152,8 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
 
         /**
          * We use units of mm here because that's the recommended units of measurement for the
-         * size variables specified in the XML for the ImageTarget trackables in data sets. E.g.:
-         *      <ImageTarget name="stones" size="247 173"/>
+         * size numbers specified in the XML for the ImageTarget trackables in data sets. E.g.:
+         *      <ImageTarget variable="stones" size="247 173"/>
          * You don't *have to* use mm here, but the units here and the units used in the XML
          * target configuration files *must* correspond for the math to work out correctly.
          */

@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -39,13 +39,13 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * the Modern Robotics ITR Seeker
  *
  * The op mode assumes that the IR Seeker
- * is configured with a name of "sensor_ir".
+ * is configured with a variable of "sensor_ir".
  *
  * Set the switch on the Modern Robotics IR beacon to 1200 at 180.  <br>
  * Turn on the IR beacon.
  * Make sure the side of the beacon with the LED on is facing the robot. <br>
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "Sensor: MR IR Seeker", group = "Sensor")

@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -44,11 +44,11 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * a Modern Robotics Color Sensor.
  *
  * The op mode assumes that the color sensor
- * is configured with a name of "sensor_color".
+ * is configured with a variable of "sensor_color".
  *
  * You can use the X button on gamepad1 to toggle the LED on and off.
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "Sensor: MR Color", group = "Sensor")
@@ -64,7 +64,7 @@ public class SensorMRColor extends LinearOpMode {
     // hsvValues is an array that will hold the hue, saturation, and value information.
     float hsvValues[] = {0F,0F,0F};
 
-    // variables is a reference to the hsvValues array.
+    // numbers is a reference to the hsvValues array.
     final float values[] = hsvValues;
 
     // get a reference to the RelativeLayout so we can change the background
@@ -106,7 +106,7 @@ public class SensorMRColor extends LinearOpMode {
       // update previous state variable.
       bPrevState = bCurrState;
 
-      // convert the RGB variables to HSV variables.
+      // convert the RGB numbers to HSV numbers.
       Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
       // send the info back to driver station using telemetry function.

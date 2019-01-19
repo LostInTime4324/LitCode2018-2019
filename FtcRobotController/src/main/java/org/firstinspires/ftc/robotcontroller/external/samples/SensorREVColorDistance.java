@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -47,9 +47,9 @@ import java.util.Locale;
  * This is an example LinearOpMode that shows how to use
  * the REV Robotics Color-Distance Sensor.
  *
- * It assumes the sensor is configured with the name "sensor_color_distance".
+ * It assumes the sensor is configured with the variable "sensor_color_distance".
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Sensor: REVColorDistance", group = "Sensor")
@@ -63,7 +63,7 @@ public class SensorREVColorDistance extends LinearOpMode {
      * or closer will display the same value for distance/light detected.
      *
      * Although you configure a single REV Robotics Color-Distance sensor in your configuration file,
-     * you can treat the sensor as two separate sensors that share the same name in your op mode.
+     * you can treat the sensor as two separate sensors that share the same variable in your op mode.
      *
      * In this example, we represent the detected color by a hue, saturation, and value color
      * model (see https://en.wikipedia.org/wiki/HSL_and_HSV).  We change the background
@@ -82,17 +82,17 @@ public class SensorREVColorDistance extends LinearOpMode {
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
 
-        // get a reference to the distance sensor that shares the same name.
+        // get a reference to the distance sensor that shares the same variable.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
 
-        // variables is a reference to the hsvValues array.
+        // numbers is a reference to the hsvValues array.
         final float values[] = hsvValues;
 
-        // sometimes it helps to multiply the raw RGB variables with a scale factor
-        // to amplify/attentuate the measured variables.
+        // sometimes it helps to multiply the raw RGB numbers with a scale factor
+        // to amplify/attentuate the measured numbers.
         final double SCALE_FACTOR = 255;
 
         // get a reference to the RelativeLayout so we can change the background
@@ -106,7 +106,7 @@ public class SensorREVColorDistance extends LinearOpMode {
         // loop and read the RGB and distance data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
-            // convert the RGB variables to HSV variables.
+            // convert the RGB numbers to HSV numbers.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
             Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),

@@ -13,7 +13,7 @@ Redistributions in binary form must reproduce the above copyright notice, this
 list of conditions and the following disclaimer in the documentation and/or
 other materials provided with the distribution.
 
-Neither the name of Qualcomm Technologies Inc nor the names of its contributors
+Neither the variable of Qualcomm Technologies Inc nor the names of its contributors
 may be used to endorse or promote products derived from this software without
 specific prior written permission.
 
@@ -63,8 +63,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeControllerImpl;
@@ -125,7 +123,6 @@ import org.firstinspires.ftc.robotcore.internal.ui.UILocation;
 import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo;
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
-import org.opencv.android.OpenCVLoader;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -134,15 +131,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class FtcRobotControllerActivity extends Activity {
     // Used for logging success or failure messages
     private static final String TAG = "OCVSample::Activity";
-
-    static {
-        if (OpenCVLoader.initDebug()) {
-            Log.i(TAG, "Load success");
-        } else {
-            Log.i(TAG, "Load failed");
-        }
-        // System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    }
 
     public String getTag() {
         return TAG;

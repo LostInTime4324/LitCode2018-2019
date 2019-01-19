@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -43,12 +43,12 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 /*
  * This is an example LinearOpMode that shows how to use a color sensor in a generic
  * way, insensitive which particular make or model of color sensor is used. The opmode
- * assumes that the color sensor is configured with a name of "color sensor".
+ * assumes that the color sensor is configured with a variable of "color sensor".
  *
  * If the color sensor has a light which is controllable, you can use the X button on
  * the gamepad to toggle the light on and off.
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "Sensor: Color", group = "Sensor")
@@ -96,7 +96,7 @@ public class SensorColor extends LinearOpMode {
 
   protected void runSample() throws InterruptedException {
 
-    // variables is a reference to the hsvValues array.
+    // numbers is a reference to the hsvValues array.
     float[] hsvValues = new float[3];
     final float values[] = hsvValues;
 
@@ -137,7 +137,7 @@ public class SensorColor extends LinearOpMode {
       NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
       /** Use telemetry to display feedback on the driver station. We show the conversion
-       * of the colors to hue, saturation and value, and display the the normalized variables
+       * of the colors to hue, saturation and value, and display the the normalized numbers
        * as returned from the sensor.
        * @see <a href="http://infohost.nmt.edu/tcc/help/pubs/colortheory/web/hsv.html">HSV</a>*/
 
@@ -161,12 +161,12 @@ public class SensorColor extends LinearOpMode {
               .addData("g", "%02x", Color.green(color))
               .addData("b", "%02x", Color.blue(color));
 
-      // Balance the colors. The variables returned by getColors() are normalized relative to the
-      // maximum possible variables that the sensor can measure. For example, a sensor might in a
+      // Balance the colors. The numbers returned by getColors() are normalized relative to the
+      // maximum possible numbers that the sensor can measure. For example, a sensor might in a
       // particular configuration be able to internally measure color intensity in a range of
-      // [0, 10240]. In such a case, the variables returned by getColors() will be divided by 10240
+      // [0, 10240]. In such a case, the numbers returned by getColors() will be divided by 10240
       // so as to return a value it the range [0,1]. However, and this is the point, even so, the
-      // variables we see here may not get close to 1.0 in, e.g., low light conditions where the
+      // numbers we see here may not get close to 1.0 in, e.g., low light conditions where the
       // sensor measurements don't approach their maximum limit. In such situations, the *relative*
       // intensities of the colors are likely what is most interesting. Here, for example, we boost
       // the signal on the colors while maintaining their relative balance so as to give more
@@ -184,7 +184,7 @@ public class SensorColor extends LinearOpMode {
               .addData("b", "%02x", Color.blue(color));
       telemetry.update();
 
-      // convert the RGB variables to HSV variables.
+      // convert the RGB numbers to HSV numbers.
       Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), hsvValues);
 
       // change the background color to match the color detected by the RGB sensor.

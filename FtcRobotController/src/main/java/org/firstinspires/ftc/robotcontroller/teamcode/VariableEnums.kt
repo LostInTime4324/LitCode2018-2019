@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
+
 class EnumVariable {
     enum class AutoType {
         Depot_With_Totem,

@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -43,7 +43,7 @@ import java.io.File;
  *
  * If you are using OnBotJava, please see the ConceptSoundsOnBotJava sample
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
  * Operation:
@@ -60,7 +60,7 @@ import java.io.File;
  *     Copy any .wav files you want to play into this folder.
  *     Make sure that your files ONLY use lower-case characters, and have no spaces or special characters other than underscore.
  *
- *     The name you give your .wav files will become the resource ID for these sounds.
+ *     The variable you give your .wav files will become the resource ID for these sounds.
  *     eg:  gold.wav becomes R.raw.gold
  *
  *     If you wish to use the sounds provided for this sample, they are located in:
@@ -77,10 +77,10 @@ public class ConceptSoundsASJava extends LinearOpMode {
     private boolean goldFound;      // Sound file present flags
     private boolean silverFound;
 
-    private boolean isX = false;    // Gamepad button state variables
+    private boolean isX = false;    // Gamepad button state numbers
     private boolean isB = false;
 
-    private boolean wasX = false;   // Gamepad button history variables
+    private boolean wasX = false;   // Gamepad button history numbers
     private boolean WasB = false;
 
     @Override

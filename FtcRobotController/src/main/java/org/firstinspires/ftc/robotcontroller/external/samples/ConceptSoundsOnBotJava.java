@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -69,10 +69,10 @@ public class ConceptSoundsOnBotJava extends LinearOpMode {
     private File silverFile = new File("/sdcard" + soundPath + "/silver.wav");
 
     // Declare OpMode members.
-    private boolean isX = false;    // Gamepad button state variables
+    private boolean isX = false;    // Gamepad button state numbers
     private boolean isB = false;
 
-    private boolean wasX = false;   // Gamepad button history variables
+    private boolean wasX = false;   // Gamepad button history numbers
     private boolean WasB = false;
 
     @Override

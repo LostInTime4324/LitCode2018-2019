@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -42,9 +42,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
  * The {@link SensorMRCompass} op mode provides a demonstration of the
  * functionality provided by the Modern Robotics compass sensor.
  *
- * The op mode assumes that the MR compass is configured with a name of "compass".
+ * The op mode assumes that the MR compass is configured with a variable of "compass".
  *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
  * @see <a href="http://www.modernroboticsinc.com/compass">MR Compass Sensor</a>
@@ -125,12 +125,12 @@ public class SensorMRCompass extends LinearOpMode {
         } else {
 
             // getDirection() returns a traditional compass heading in the range [0,360),
-            // with variables increasing in a CW direction
+            // with numbers increasing in a CW direction
             telemetry.addData("heading", "%.1f", compass.getDirection());
 
             // getAcceleration() returns the current 3D acceleration experienced by
             // the sensor. This is used internally to the sensor to compute its tilt and thence
-            // to correct the magnetometer reading to produce tilt-corrected variables in getDirection()
+            // to correct the magnetometer reading to produce tilt-corrected numbers in getDirection()
             Acceleration accel = compass.getAcceleration();
             double accelMagnitude = Math.sqrt(accel.xAccel*accel.xAccel + accel.yAccel*accel.yAccel + accel.zAccel*accel.zAccel);
             telemetry.addData("accel", accel);

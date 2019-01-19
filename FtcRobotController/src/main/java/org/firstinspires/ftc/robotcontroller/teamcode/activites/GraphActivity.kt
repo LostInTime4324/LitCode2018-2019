@@ -19,7 +19,7 @@ class GraphActivity : Activity() {
 
         graphView.legendRenderer.isVisible = true
 
-        val graphSpinner = createSpinner(this, graphs.toArray()) { item, pos ->
+        val graphSpinner = createSpinner(this, graphs) { item, pos ->
             graphs[pos].show(graphView)
         }
 

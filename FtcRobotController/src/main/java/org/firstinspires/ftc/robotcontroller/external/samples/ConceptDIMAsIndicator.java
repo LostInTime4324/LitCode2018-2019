@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This OpMode illustrates using the Device Interface Module as a signalling device.
  * The code is structured as a LinearOpMode
  *
- * This code assumes a DIM name "dim".
+ * This code assumes a DIM variable "dim".
  *
  * There are many examples where the robot might like to signal the driver, without requiring them
  * to look at the driver station.  This might be something like a "ball in hopper" condition or a
@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The DIM has two user settable indicator LEDs (one red one blue).  These can be controlled
  * directly from your program.
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "Concept: DIM As Indicator", group = "Concept")
@@ -68,7 +68,7 @@ public class ConceptDIMAsIndicator extends LinearOpMode {
     public void runOpMode() {
 
         // Connect to motor (Assume standard left wheel)
-        // Change the text in quotes to match any motor name on your robot.
+        // Change the text in quotes to match any motor variable on your robot.
         dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
 
         // Toggle LEDs while Waiting for the reset button

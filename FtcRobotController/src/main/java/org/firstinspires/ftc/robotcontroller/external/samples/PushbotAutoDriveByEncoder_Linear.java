@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *  There are other ways to perform encoder based moves, but this method is probably the simplest.
  *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the unpause profile
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
@@ -82,7 +82,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     public void runOpMode() {
 
         /*
-         * Initialize the drive system variables.
+         * Initialize the drive system numbers.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);

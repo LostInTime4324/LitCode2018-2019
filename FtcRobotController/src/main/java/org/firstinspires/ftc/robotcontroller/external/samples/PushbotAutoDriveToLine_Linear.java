@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -45,12 +45,12 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  *   instead of the LEGO sensor.  Chose to use one sensor or the other.
  *
  *   Setting the correct WHITE_THRESHOLD value is key to stopping correctly.
- *   This should be set half way between the light and dark variables.
- *   These variables can be read on the screen once the OpMode has been INIT, but before it is STARTED.
+ *   This should be set half way between the light and dark numbers.
+ *   These numbers can be read on the screen once the OpMode has been INIT, but before it is STARTED.
  *   Move the senso on asnd off the white line and not the min and max readings.
  *   Edit this code to make WHITE_THRESHOLD half way between the min and max.
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new variable.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
@@ -69,7 +69,7 @@ public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        /* Initialize the drive system variables.
+        /* Initialize the drive system numbers.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);

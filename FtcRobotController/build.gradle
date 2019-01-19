@@ -35,7 +35,4 @@ dependencies {
     implementation('com.jjoe64:graphview:4.2.1') {
         exclude module: 'support-annotations'
     }
-    implementation project(':openCVLibrary343')
-    implementation project(':DogeCV')
-    implementation project(path: ':DogeCV')
 }

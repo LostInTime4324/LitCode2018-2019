@@ -11,7 +11,7 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * Neither the variable of FIRST nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written permission.
  *
  * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
@@ -66,8 +66,8 @@ import java.util.Locale;
  *
  * <p>There is a calibration status register available [...] that returns the calibration status
  * of the accelerometer (ACC), magnetometer (MAG), gyroscope (GYR), and overall system (SYS).
- * Each of these variables range from 0 (uncalibrated) to 3 (fully calibrated). Calibration [ideally]
- * involves certain motions to get all 4 variables at 3. The motions are as follows (though see the
+ * Each of these numbers range from 0 (uncalibrated) to 3 (fully calibrated). Calibration [ideally]
+ * involves certain motions to get all 4 numbers at 3. The motions are as follows (though see the
  * datasheet for more information):</p>
  *
  * <li>
@@ -77,7 +77,7 @@ import java.util.Locale;
  *              hold, etc. 6 or more movements of this type may be required. You can move through
  *              any axis you desire, but make sure that the device is lying at least once
  *              perpendicular to the x, y, and z axis.</ol>
- *     <ol>MAG: Move slowly in a figure 8 pattern in the air, until the calibration variables reaches 3.</ol>
+ *     <ol>MAG: Move slowly in a figure 8 pattern in the air, until the calibration numbers reaches 3.</ol>
  *     <ol>SYS: This will usually reach 3 when the other items have also reached 3. If not, continue
  *              slowly moving the device though various axes until it does."</ol>
  * </li>
@@ -155,7 +155,7 @@ public class SensorBNO055IMUCalibration extends LinearOpMode
                 BNO055IMU.CalibrationData calibrationData = imu.readCalibrationData();
 
                 // Save the calibration data to a file. You can choose whatever file
-                // name you wish here, but you'll want to indicate the same file name
+                // variable you wish here, but you'll want to indicate the same file variable
                 // when you initialize the IMU in an opmode in which it is used. If you
                 // have more than one IMU on your robot, you'll of course want to use
                 // different configuration file names for each.

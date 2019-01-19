@@ -31,22 +31,22 @@ class VariableControlActivity : Activity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         resetButton.setOnClickListener {
-            Variables[selectedVariable!!] = savedNumber!!
+            Variables.numbers[selectedVariable!!] = savedNumber!!
         }
 
         saveButton.setOnClickListener {
-            savedNumber = Variables[selectedVariable!!]
+            savedNumber = Variables.numbers[selectedVariable!!]
             updatePreferences()
         }
 
-        Variables.variables.entries.forEachIndexed { row, (name, number) ->
+        Variables.numbers.entries.forEachIndexed { row, (name, number) ->
             NumberField(name, number, row)
         }
 
-
+        val numbersSize = Variables.numbers.size
 
         Variables.enumMap.toList().forEachIndexed { row, (enumClass, enum) ->
-            EnumField(enumClass, enum, row)
+            EnumField(enumClass, enum, row + numbersSize)
         }
     }
 
@@ -56,16 +56,16 @@ class VariableControlActivity : Activity() {
     }
 
     fun updatePreferences() {
-        Variables.variables.forEach { (name, number) ->
-            preferences.edit().putString(name, number.toString()).apply()
+        Variables.numbers.forEach { (variable, number) ->
+            preferences.edit().putString(variable.name, number.toString()).apply()
         }
     }
 
     val context = this
 
-    inner class NumberField(val name: String, var number: Double, row: Int) {
+    inner class NumberField(val variable: NumberVariable, var number: Double, row: Int) {
         val nameText = TextView(context).apply {
-            text = name.replace("_", " ")
+            text = variable.name.replace("_", " ")
         }
 
         val numberText = EditText(context).apply {
@@ -73,7 +73,7 @@ class VariableControlActivity : Activity() {
             setText(number.toRoundedString())
             setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) {
-                    selectedVariable = name
+                    selectedVariable = variable
                     savedNumber = number
                 }
             }
@@ -104,13 +104,13 @@ class VariableControlActivity : Activity() {
             text = enumClass.simpleName.replace("_", " ")
         }
 
-        val spinner = createSpinner(context, enums.map { it.name }, enum) { view, position ->
+        val spinner = createSpinner(context, enums.map { it.name.replace("_", " ") }, enum) { view, position ->
             enumMap[enumClass] = enums[position]
         }
 
         init {
-            variableControlLayout.addView(nameText, createGridParams(row, 3))
-            variableControlLayout.addView(spinner, createGridParams(row, 4))
+            variableControlLayout.addView(nameText, createGridParams(row, 0))
+            variableControlLayout.addView(spinner, createGridParams(row, 1))
         }
     }
 }
