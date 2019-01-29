@@ -2,8 +2,8 @@ package org.firstinspires.ftc.robotcontroller.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.robotcontroller.teamcode.Direction.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Navigation
-import org.firstinspires.ftc.robotcontroller.teamcode.Navigation.Orientation.*
 import kotlin.math.abs
 
 @TeleOp(name = "TeleOpMecanum")
@@ -15,6 +15,8 @@ class TeleOpMecanum : OpMode() {
 
     val minPower = 0.15
 
+    var aPressed = false
+
     val nav by lazy {
         Navigation(this)
     }
@@ -24,26 +26,39 @@ class TeleOpMecanum : OpMode() {
     }
 
     override fun loop() {
-//        if(gamepad1.a) {
-//            nav.frontLeftMotor.power = 1.0
-//        } else if(gamepad1.b) {
-//            nav.frontRightMotor.power = 1.0
-//        } else if(gamepad1.x) {
-//            nav.backLeftMotor.power = 1.0
-//        } else if(gamepad1.y) {
-//            nav.backRightMotor.power = 1.0
-//        }
+        if (!aPressed && gamepad1.a) {
+            aPressed = true
+            nav.reverseDirection()
+        }
+        if (!gamepad1.a) {
+            aPressed = false
+        }
+        if (abs(leftY) > minPower || abs(leftX) > minPower) {
+            nav.setPower {
+                addPower(leftY, FORWARD)
+                addPower(leftX, RIGHT)
+            }
 
+        } else if (abs(rightX) > minPower) {
+            nav.setPower(rightX, CW)
+        } else if (gamepad1.right_bumper) {
+            nav.setPower(0.5, RIGHT)
+        } else if (gamepad1.left_bumper) {
+            nav.setPower(0.5, LEFT)
+        } else {
+            nav.resetDrivePower()
+        }
 
         if (abs(leftY) > abs(leftX) && abs(leftY) > minPower) {
-            nav.setPower(Vertical, leftY)
+            nav.setPower(leftY, FORWARD)
         } else if (abs(leftX) > minPower) {
-            nav.setPower(Horizontal, leftX)
+            nav.setPower(leftX, RIGHT)
         } else if (abs(rightX) > minPower) {
-            nav.setPower(Rotational, rightX)
+            nav.setPower(rightX, CW)
         } else {
-            nav.setPower(0.0)
+            nav.resetDrivePower()
         }
+
         nav.logEncoderValues()
 
 
@@ -70,12 +85,12 @@ class TeleOpMecanum : OpMode() {
         }
 
         //Run the intakeasdf
-        if (gamepad2.left_bumper || gamepad1.left_bumper) {
+        if (gamepad2.left_bumper) {
             nav.intakeMotor.power = 1.0
+        } else if (gamepad2.right_bumper) {
+            nav.intakeMotor.power = -1.0
         } else {
             nav.intakeMotor.power = 0.0
         }
-
-
     }
 }

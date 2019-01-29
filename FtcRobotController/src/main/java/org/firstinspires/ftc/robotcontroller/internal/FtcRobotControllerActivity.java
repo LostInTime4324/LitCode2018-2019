@@ -103,7 +103,6 @@ import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables;
-import org.firstinspires.ftc.robotcontroller.teamcode.activites.AutoControlActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.GraphActivity;
 import org.firstinspires.ftc.robotcontroller.teamcode.activites.VariableControlActivity;
 import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
@@ -364,25 +363,7 @@ public class FtcRobotControllerActivity extends Activity {
                 startActivity(intent2);
             }
         });
-        final Intent intent3 = new Intent(this, AutoControlActivity.class);
-        findViewById(R.id.autoControlInitButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(intent3);
-            }
-        });
-        findViewById(R.id.cameraToggle).setOnClickListener(new View.OnClickListener() {
-            boolean checked = false;
-            @Override
-            public void onClick(View view) {
-                if(checked) {
 
-                } else {
-
-                }
-                checked = !checked;
-            }
-        });
         Variables.init(this);
     }
 

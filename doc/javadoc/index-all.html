@@ -2256,7 +2256,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/android/AndroidOrientation.html#getAngle--">getAngle()</a></span> - Method in class org.firstinspires.ftc.robotcore.external.android.<a href="org/firstinspires/ftc/robotcore/external/android/AndroidOrientation.html" title="class in org.firstinspires.ftc.robotcore.external.android">AndroidOrientation</a></dt>
 <dd>
-<div class="block">Returns the angle in which the orientation sensor is tilted, treating Roll as the x-coordinate
+<div class="block">Returns the angle in which the direction sensor is tilted, treating Roll as the x-coordinate
  and Pitch as the y-coordinate.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/android/AndroidGyroscope.html#getAngleUnit--">getAngleUnit()</a></span> - Method in class org.firstinspires.ftc.robotcore.external.android.<a href="org/firstinspires/ftc/robotcore/external/android/AndroidGyroscope.html" title="class in org.firstinspires.ftc.robotcore.external.android">AndroidGyroscope</a></dt>
@@ -2269,11 +2269,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/qualcomm/robotcore/hardware/OrientationSensor.html#getAngularOrientation-org.firstinspires.ftc.robotcore.external.navigation.AxesReference-org.firstinspires.ftc.robotcore.external.navigation.AxesOrder-org.firstinspires.ftc.robotcore.external.navigation.AngleUnit-">getAngularOrientation(AxesReference, AxesOrder, AngleUnit)</a></span> - Method in interface com.qualcomm.robotcore.hardware.<a href="com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware">OrientationSensor</a></dt>
 <dd>
-<div class="block">Returns the absolute orientation of the sensor as a set three angles.</div>
+<div class="block">Returns the absolute direction of the sensor as a set three angles.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/qualcomm/robotcore/hardware/OrientationSensor.html#getAngularOrientationAxes--">getAngularOrientationAxes()</a></span> - Method in interface com.qualcomm.robotcore.hardware.<a href="com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware">OrientationSensor</a></dt>
 <dd>
-<div class="block">Returns the axes on which the sensor measures angular orientation.</div>
+<div class="block">Returns the axes on which the sensor measures angular direction.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/qualcomm/robotcore/hardware/Gyroscope.html#getAngularVelocity-org.firstinspires.ftc.robotcore.external.navigation.AngleUnit-">getAngularVelocity(AngleUnit)</a></span> - Method in interface com.qualcomm.robotcore.hardware.<a href="com/qualcomm/robotcore/hardware/Gyroscope.html" title="interface in com.qualcomm.robotcore.hardware">Gyroscope</a></dt>
 <dd>
@@ -3062,12 +3062,12 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/navigation/Orientation.html#getOrientation-org.firstinspires.ftc.robotcore.external.matrices.MatrixF-org.firstinspires.ftc.robotcore.external.navigation.AxesReference-org.firstinspires.ftc.robotcore.external.navigation.AxesOrder-org.firstinspires.ftc.robotcore.external.navigation.AngleUnit-">getOrientation(MatrixF, AxesReference, AxesOrder, AngleUnit)</a></span> - Static method in class org.firstinspires.ftc.robotcore.external.navigation.<a href="org/firstinspires/ftc/robotcore/external/navigation/Orientation.html" title="class in org.firstinspires.ftc.robotcore.external.navigation">Orientation</a></dt>
 <dd>
-<div class="block">Given a rotation matrix, and an <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesReference.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesReference</code></a> and <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesOrder.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesOrder</code></a>, returns an orientation
+<div class="block">Given a rotation matrix, and an <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesReference.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesReference</code></a> and <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesOrder.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesOrder</code></a>, returns an direction
  that would produce that rotation matrix.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/navigation/Orientation.html#getOrientation-org.firstinspires.ftc.robotcore.external.matrices.MatrixF-org.firstinspires.ftc.robotcore.external.navigation.AxesReference-org.firstinspires.ftc.robotcore.external.navigation.AxesOrder-org.firstinspires.ftc.robotcore.external.navigation.AngleUnit-org.firstinspires.ftc.robotcore.external.navigation.Orientation.AngleSet-">getOrientation(MatrixF, AxesReference, AxesOrder, AngleUnit, Orientation.AngleSet)</a></span> - Static method in class org.firstinspires.ftc.robotcore.external.navigation.<a href="org/firstinspires/ftc/robotcore/external/navigation/Orientation.html" title="class in org.firstinspires.ftc.robotcore.external.navigation">Orientation</a></dt>
 <dd>
-<div class="block">Given a rotation matrix, and an <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesReference.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesReference</code></a> and <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesOrder.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesOrder</code></a>, returns an orientation
+<div class="block">Given a rotation matrix, and an <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesReference.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesReference</code></a> and <a href="org/firstinspires/ftc/robotcore/external/navigation/AxesOrder.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><code>AxesOrder</code></a>, returns an direction
  that would produce that rotation matrix.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/qualcomm/robotcore/eventloop/SyncdDevice.html#getOwner--">getOwner()</a></span> - Method in interface com.qualcomm.robotcore.eventloop.<a href="com/qualcomm/robotcore/eventloop/SyncdDevice.html" title="interface in com.qualcomm.robotcore.eventloop">SyncdDevice</a></dt>
@@ -4330,7 +4330,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/android/AndroidOrientation.html#isAvailable--">isAvailable()</a></span> - Method in class org.firstinspires.ftc.robotcore.external.android.<a href="org/firstinspires/ftc/robotcore/external/android/AndroidOrientation.html" title="class in org.firstinspires.ftc.robotcore.external.android">AndroidOrientation</a></dt>
 <dd>
-<div class="block">Returns true if the Android device has the sensors required for orientation.</div>
+<div class="block">Returns true if the Android device has the sensors required for direction.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/navigation/MotionDetection.html#isAvailable--">isAvailable()</a></span> - Method in class org.firstinspires.ftc.robotcore.external.navigation.<a href="org/firstinspires/ftc/robotcore/external/navigation/MotionDetection.html" title="class in org.firstinspires.ftc.robotcore.external.navigation">MotionDetection</a></dt>
 <dd>
@@ -5514,7 +5514,7 @@
 </dd>
 <dt><a href="com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware"><span class="typeNameLink">OrientationSensor</span></a> - Interface in <a href="com/qualcomm/robotcore/hardware/package-summary.html">com.qualcomm.robotcore.hardware</a></dt>
 <dd>
-<div class="block"><a href="com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware"><code>OrientationSensor</code></a> provides access to sensors which measure absolute orientation</div>
+<div class="block"><a href="com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware"><code>OrientationSensor</code></a> provides access to sensors which measure absolute direction</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/qualcomm/robotcore/hardware/HardwareDeviceHealthImpl.html#override">override</a></span> - Variable in class com.qualcomm.robotcore.hardware.<a href="com/qualcomm/robotcore/hardware/HardwareDeviceHealthImpl.html" title="class in com.qualcomm.robotcore.hardware">HardwareDeviceHealthImpl</a></dt>
 <dd>&nbsp;</dd>
@@ -5840,7 +5840,7 @@
 <dl>
 <dt><a href="org/firstinspires/ftc/robotcore/external/navigation/Quaternion.html" title="class in org.firstinspires.ftc.robotcore.external.navigation"><span class="typeNameLink">Quaternion</span></a> - Class in <a href="org/firstinspires/ftc/robotcore/external/navigation/package-summary.html">org.firstinspires.ftc.robotcore.external.navigation</a></dt>
 <dd>
-<div class="block">A <a href="org/firstinspires/ftc/robotcore/external/navigation/Quaternion.html" title="class in org.firstinspires.ftc.robotcore.external.navigation"><code>Quaternion</code></a> can indicate an orientation in three-space without the trouble of
+<div class="block">A <a href="org/firstinspires/ftc/robotcore/external/navigation/Quaternion.html" title="class in org.firstinspires.ftc.robotcore.external.navigation"><code>Quaternion</code></a> can indicate an direction in three-space without the trouble of
  possible gimbal-lock.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/firstinspires/ftc/robotcore/external/navigation/Quaternion.html#Quaternion--">Quaternion()</a></span> - Constructor for class org.firstinspires.ftc.robotcore.external.navigation.<a href="org/firstinspires/ftc/robotcore/external/navigation/Quaternion.html" title="class in org.firstinspires.ftc.robotcore.external.navigation">Quaternion</a></dt>
@@ -8685,7 +8685,7 @@ the order they are declared.</div>
 <dt><a href="org/firstinspires/ftc/robotcore/external/navigation/VuforiaLocalizer.html" title="interface in org.firstinspires.ftc.robotcore.external.navigation"><span class="typeNameLink">VuforiaLocalizer</span></a> - Interface in <a href="org/firstinspires/ftc/robotcore/external/navigation/package-summary.html">org.firstinspires.ftc.robotcore.external.navigation</a></dt>
 <dd>
 <div class="block">Robot "localization" denotes a robot's ability to establish its own position and
- orientation within its frame of reference.</div>
+ direction within its frame of reference.</div>
 </dd>
 <dt><a href="org/firstinspires/ftc/robotcore/external/navigation/VuforiaLocalizer.CameraDirection.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation"><span class="typeNameLink">VuforiaLocalizer.CameraDirection</span></a> - Enum in <a href="org/firstinspires/ftc/robotcore/external/navigation/package-summary.html">org.firstinspires.ftc.robotcore.external.navigation</a></dt>
 <dd>

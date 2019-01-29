@@ -1,53 +1,48 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
-import java.util.*
+import kotlin.collections.LinkedHashMap
 
 object Variables {
     const val VARIABLE_PREFRENCES_TAG = "Variables"
 
-    val numbers = LinkedHashMap<NumberVariable, Double>()
-
-    object vars {
-        inline operator fun get(numberVariable: NumberVariable) = numbers[numberVariable] ?: numberVariable.default
-    }
+    const val NUMBER_PREFERENCES = "Number Variable Preferences"
+    const val BOOLEAN_PREFERENCES = "Boolean Variable Preferences"
+    const val ENUM_PREFERENCES = "Enum Variable Preferences"
 
     val enumMap = LinkedHashMap<Class<*>, Enum<*>>()
 
-    object enums {
-        inline operator fun <reified T : Enum<T>> invoke(): Enum<*> = enumMap[T::class.java]!! as Enum<T>
-
+    object enums : Map<Class<*>, Enum<*>> by LinkedHashMap<Class<*>, Enum<*>>() {
+        inline operator fun <reified T : Enum<T>> invoke(): T = enumMap[T::class.java]!! as T
     }
-
-    lateinit var preferences: SharedPreferences
-
 
     @JvmStatic
     fun init(context: Context) {
-        preferences = context.getSharedPreferences(VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
-        NumberVariable.values().forEach { variable ->
-            val variableName = variable.name
-            val default = variable.default.toString()
-            val number = if (preferences.contains(variableName))
-                preferences.getString(variableName, default)
-            else
-                default
-            numbers[variable] = number.toDouble()
+        context.getSharedPreferences(VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE).edit().clear().apply()
+        val numberPreferences = context.getSharedPreferences(NUMBER_PREFERENCES, Context.MODE_PRIVATE)
+        NumberVariable.values().forEach { number ->
+            val variableName = number.name
+            val default = number.number
+            if (numberPreferences.contains(variableName))
+                number.number = numberPreferences.getFloat(variableName, default.toFloat()).toDouble()
         }
+        val enumPreferences = context.getSharedPreferences(ENUM_PREFERENCES, Context.MODE_PRIVATE)
         EnumVariable::class.java.classes.forEach { enumClass ->
             val className = enumClass.simpleName
             val enumConstants = enumClass.enumConstants!!.map { it as Enum<*> }
-            val savedEnumName = preferences.getString(className, null)
-            enumMap[enumClass] = if (preferences.contains(className))
-                enumConstants.first { it.name == savedEnumName!! }
+            val savedEnumName = enumPreferences.getString(className, null)
+            val default = enumConstants.first()
+            enumMap[enumClass] = if (enumPreferences.contains(className))
+                enumConstants.firstOrNull { it.name == savedEnumName!! } ?: default
             else
-                enumConstants.first()
-
+                default
         }
-        Log.i(VARIABLE_PREFRENCES_TAG, enumMap.toList().joinToString { (key, value) ->
-            "Key: $key Value: $value\n"
-        })
+        val booleanPreferences = context.getSharedPreferences(BOOLEAN_PREFERENCES, Context.MODE_PRIVATE)
+        BooleanVariable.values().forEach { variable ->
+            val variableName = variable.name
+            val default = variable.boolean
+            if (booleanPreferences.contains(variableName))
+                variable.boolean = booleanPreferences.getBoolean(variableName, default)
+        }
     }
 }

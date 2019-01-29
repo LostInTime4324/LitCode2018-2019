@@ -2,58 +2,77 @@ package org.firstinspires.ftc.robotcontroller.teamcode
 
 
 class EnumVariable {
-    enum class AutoType {
-        Depot_With_Totem,
-        Depot_No_Totem,
-        Crator_With_Totem,
-        Crator_No_Totem
+    enum class AUTO_SIDE {
+        DEPOT,
+        CRATER
     }
-    enum class AutoTest {
-        Drive_By_Encders,
-        Drive_By_PID,
-        Drive_By_Time,
-        Turn_By_Gyro,
-        Turn_By_Time,
 
+    enum class AUTO_TEST {
+        WAIT,
+        DETECT,
+        DRIVE_BY_ENCODERS,
+        DRIVE_BY_PID,
+        DRIVE_BY_TIME,
+        TURN_BY_GYRO,
+        TURN_BY_TIME,
+        DROP_ELEVATOR,
+        DROP_TOTEM,
+        PUSH_MINERAL
+    }
+
+    enum class GOLD_LOCATION {
+        DETECT,
+        LEFT,
+        CENTER,
+        RIGHT
     }
 }
 
-enum class NumberVariable(val default: Double = 0.0) {
-    On_Depot_Side(1.0),
-    Do_Both_Objectives(0.0),
-    Using_Elevator(1.0),
-    Mineral_Side,
-    Test_Variable,
-    Drive_Power(0.5),
-    Distance_To_Side_Mineral,
-    Distance_To_Center_Minteral(29.0),
-    Distance_Backwards_On_Center_Mineral(20.0),
-    Distance_Backwards_On_Side_Mineral,
-    Distance_To_Depot_On_Side,
-    Distance_To_Depot_On_Center,
-    Distance_To_Crater_On_Depot,
-    Distance_To_Crater_On_Depot_No_Totem,
-    Distance_To_Wall_On_Crater,
-    Distance_To_Depot_On_Crater,
-    Distance_To_Crater_On_Crater,
-    Angle_To_Side_Mineral,
-    Angle_To_Crater_On_Depot,
-    Angle_To_Crater_On_Depot_No_Totem,
-    Angle_To_Wall_On_Crater,
-    Angle_To_Depot_On_Crater,
-    Elevator_Move_Time(5.0),
-    Elevator_Power(0.5),
-    Totem_Move_Time(3.0),
-    Totem_Power,
-    Intake_Power,
-    Encoder_Correction_Factor(1.0),
-    Turn_Correction_Kd,
-    Turn_Correction_Ki,
-    Turn_Correction_Kp,
-    Turn_Kd(0.001),
-    Turn_Ki(0.0001),
-    Turn_Kp(0.05),
-    Drive_Kd,
-    Drive_Kp,
-    Drive_Ki;
+enum class NumberVariable(var number: Double = 0.0) {
+    TEST_VARIABLE,
+    TIME_TO_RIGHT_MINERAL(-1.8),
+    TIME_TO_CENTER_MINERAL(-1.5),
+    TIME_TO_LEFT_MINERAL(-1.2),
+    TIME_TO_DEPOT_ON_LEFT(-0.6),
+    TIME_TO_DEPOT_ON_RIGHT(0.6),
+    DISTANCE_TO_SIDE_MINERAL,
+    DISTANCE_TO_CENTER_MINERAL(29.0),
+    DISTANCE_FROM_CENTER_MINERAL(20.0),
+    DISTANCE_FROM_SIDE_MINERAL,
+    DISTANCE_TO_DEPOT_ON_SIDE(29.0),
+    DISTANCE_TO_DEPOT_ON_CENTER(30.0),
+    DISTANCE_TO_CRATER_ON_DEPOT,
+    DISTANCE_TO_CRATER_ON_DEPOT_NO_TOTEM,
+    DISTANCE_TO_WALL_ON_CRATER,
+    DISTANCE_TO_DEPOT_ON_CRATER,
+    DISTANCE_TO_CRATER_ON_CRATER,
+    ANGLE_TO_CENTER_MINERAL(-90.0),
+    ANGLE_TO_SIDE_MINERAL(30.0),
+    ANGLE_TO_CRATER_ON_DEPOT,
+    ANGLE_TO_CRATER_ON_DEPOT_NO_TOTEM,
+    ANGLE_TO_WALL_ON_CRATER,
+    ANGLE_TO_DEPOT_ON_CRATER,
+    ELEVATOR_MOVE_TIME(4.8),
+    ELEVATOR_POWER(0.5),
+    TOTEM_MOVE_TIME(3.0),
+    TOTEM_POWER(0.5),
+    ENCODER_CORRECTION_FACTOR(1.0),
+    TURN_CORRECTION_KD,
+    TURN_CORRECTION_KI,
+    TURN_CORRECTION_KP,
+    TURN_KD(0.001),
+    TURN_KI(0.0001),
+    TURN_KP(0.05),
+    DRIVE_POWER(0.5),
+    DRIVE_KD,
+    DRIVE_KP,
+    DRIVE_KI,
+    DRIVE_SERVO_POWER(1.0)
+}
+
+enum class BooleanVariable(var boolean: Boolean = false) {
+    USE_TOTEM(true),
+    USE_SERVO,
+    USE_ELEVATOR(true),
+    DO_BOTH_OBJECTIVES
 }

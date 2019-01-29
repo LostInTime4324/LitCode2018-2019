@@ -104,7 +104,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">OrientationSensor</span></pre>
-<div class="block"><a href="../../../../com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware"><code>OrientationSensor</code></a> provides access to sensors which measure absolute orientation</div>
+<div class="block"><a href="../../../../com/qualcomm/robotcore/hardware/OrientationSensor.html" title="interface in com.qualcomm.robotcore.hardware"><code>OrientationSensor</code></a> provides access to sensors which measure absolute direction</div>
 </li>
 </ul>
 </div>
@@ -128,13 +128,13 @@ var activeTableTab = "activeTableTab";
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/OrientationSensor.html#getAngularOrientation-org.firstinspires.ftc.robotcore.external.navigation.AxesReference-org.firstinspires.ftc.robotcore.external.navigation.AxesOrder-org.firstinspires.ftc.robotcore.external.navigation.AngleUnit-">getAngularOrientation</a></span>(<a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/AxesReference.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">AxesReference</a>&nbsp;reference,
                      <a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/AxesOrder.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">AxesOrder</a>&nbsp;order,
                      <a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/AngleUnit.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">AngleUnit</a>&nbsp;angleUnit)</code>
-<div class="block">Returns the absolute orientation of the sensor as a set three angles.</div>
+<div class="block">Returns the absolute direction of the sensor as a set three angles.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Set&lt;<a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/Axis.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">Axis</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/OrientationSensor.html#getAngularOrientationAxes--">getAngularOrientationAxes</a></span>()</code>
-<div class="block">Returns the axes on which the sensor measures angular orientation.</div>
+<div class="block">Returns the axes on which the sensor measures angular direction.</div>
 </td>
 </tr>
 </table>
@@ -159,10 +159,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getAngularOrientationAxes</h4>
 <pre>java.util.Set&lt;<a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/Axis.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">Axis</a>&gt;&nbsp;getAngularOrientationAxes()</pre>
-<div class="block">Returns the axes on which the sensor measures angular orientation.</div>
+<div class="block">Returns the axes on which the sensor measures angular direction.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the axes on which the sensor measures angular orientation.</dd>
+<dd>the axes on which the sensor measures angular direction.</dd>
 </dl>
 </li>
 </ul>
@@ -175,15 +175,15 @@ var activeTableTab = "activeTableTab";
 <pre><a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/Orientation.html" title="class in org.firstinspires.ftc.robotcore.external.navigation">Orientation</a>&nbsp;getAngularOrientation(<a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/AxesReference.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">AxesReference</a>&nbsp;reference,
                                   <a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/AxesOrder.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">AxesOrder</a>&nbsp;order,
                                   <a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/AngleUnit.html" title="enum in org.firstinspires.ftc.robotcore.external.navigation">AngleUnit</a>&nbsp;angleUnit)</pre>
-<div class="block">Returns the absolute orientation of the sensor as a set three angles. Axes on which
- absolute orientation is not measured are reported as zero.</div>
+<div class="block">Returns the absolute direction of the sensor as a set three angles. Axes on which
+ absolute direction is not measured are reported as zero.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>reference</code> - the axes reference in which the result will be expressed</dd>
 <dd><code>order</code> - the axes order in which the result will be expressed</dd>
 <dd><code>angleUnit</code> - the angle units in which the result will be expressed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the absolute orientation of the sensor</dd>
+<dd>the absolute direction of the sensor</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../org/firstinspires/ftc/robotcore/external/navigation/Orientation.html" title="class in org.firstinspires.ftc.robotcore.external.navigation"><code>Orientation</code></a></dd>
 </dl>

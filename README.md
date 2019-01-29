@@ -329,7 +329,7 @@ Changes include:
     - Added VuforiaTrackableDefaultListener.getPose and Vuforia.trackPose blocks.
     - Added optimized blocks support for Vuforia extended tracking.
     - Added atan2 block to the math category.
-    - Added useCompetitionFieldTargetLocations parameter to Vuforia.initialize block.  If set to false, the target locations are placed at (0,0,0) with target orientation as specified in https://github.com/gearsincorg/FTCVuforiaDemo/blob/master/Robot_Navigation.java tutorial op mode.
+    - Added useCompetitionFieldTargetLocations parameter to Vuforia.initialize block.  If set to false, the target locations are placed at (0,0,0) with target direction as specified in https://github.com/gearsincorg/FTCVuforiaDemo/blob/master/Robot_Navigation.java tutorial op mode.
  * Incorporates additional improvements to USB comm layer to improve system resiliency (to recover from a greater number of communication disruptions).
 
 **************************************************************************************
@@ -372,7 +372,7 @@ Changes include:
     - Fixes bug with projects page for Firefox browser.
     - Added IsSpeaking block to AndroidTextToSpeech.  
  * Implements support for the REV Robotics Expansion Hub
-    - Implements support for integral REV IMU (physically installed on I2C bus 0, uses same Bosch BNO055 9 axis absolute orientation sensor as Adafruit 9DOF abs orientation sensor).    - Implements support for REV color/range/light sensor.
+    - Implements support for integral REV IMU (physically installed on I2C bus 0, uses same Bosch BNO055 9 axis absolute direction sensor as Adafruit 9DOF abs direction sensor).    - Implements support for REV color/range/light sensor.
     - Provides support to update Expansion Hub firmware through FTC SDK.
     - Detects REV firmware version and records in log file.
     - Includes support for REV Control Hub (note that the REV Control Hub is not yet approved for FTC use).

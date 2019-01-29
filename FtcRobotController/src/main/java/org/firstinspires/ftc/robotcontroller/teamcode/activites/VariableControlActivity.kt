@@ -6,22 +6,21 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.view.WindowManager
+import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import com.qualcomm.ftcrobotcontroller.R
 import kotlinx.android.synthetic.main.activity_variable_control.*
 import org.firstinspires.ftc.robotcontroller.teamcode.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables.BOOLEAN_PREFERENCES
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables.ENUM_PREFERENCES
+import org.firstinspires.ftc.robotcontroller.teamcode.Variables.NUMBER_PREFERENCES
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables.enumMap
 
 class VariableControlActivity : Activity() {
-
-    val preferences by lazy {
-        getSharedPreferences(Variables.VARIABLE_PREFRENCES_TAG, Context.MODE_PRIVATE)
-    }
-
-    var selectedVariable: NumberVariable? = null
-    var savedNumber: Double? = null
+    val numberPreferences by lazy {getSharedPreferences(NUMBER_PREFERENCES, Context.MODE_PRIVATE) }
+    val enumPreferences by lazy {getSharedPreferences(ENUM_PREFERENCES, Context.MODE_PRIVATE)}
+    val booleanPreferences by lazy {getSharedPreferences(BOOLEAN_PREFERENCES, Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,23 +29,20 @@ class VariableControlActivity : Activity() {
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
-        resetButton.setOnClickListener {
-            Variables.numbers[selectedVariable!!] = savedNumber!!
+        NumberVariable.values().forEachIndexed { row, variable ->
+            addNumberField(variable, row)
         }
 
-        saveButton.setOnClickListener {
-            savedNumber = Variables.numbers[selectedVariable!!]
-            updatePreferences()
+        val enumStartRow = NumberVariable.values().size
+
+        enumMap.toList().forEachIndexed { row, (enumClass, enum) ->
+            addEnumField(enumClass, enum, row + enumStartRow)
         }
 
-        Variables.numbers.entries.forEachIndexed { row, (name, number) ->
-            NumberField(name, number, row)
-        }
+        val booleanStartRow = enumStartRow + enumMap.size
 
-        val numbersSize = Variables.numbers.size
-
-        Variables.enumMap.toList().forEachIndexed { row, (enumClass, enum) ->
-            EnumField(enumClass, enum, row + numbersSize)
+        BooleanVariable.values().forEachIndexed { row, booleanVariable ->
+            addBooleanField(booleanVariable, row + booleanStartRow)
         }
     }
 
@@ -56,61 +52,71 @@ class VariableControlActivity : Activity() {
     }
 
     fun updatePreferences() {
-        Variables.numbers.forEach { (variable, number) ->
-            preferences.edit().putString(variable.name, number.toString()).apply()
+        NumberVariable.values().forEach { variable ->
+            numberPreferences.edit().putFloat(variable.name, variable.number.toFloat()).apply()
+        }
+        BooleanVariable.values().forEach { variable ->
+            booleanPreferences.edit().putBoolean(variable.name, variable.boolean).apply()
+        }
+        enumMap.forEach { (enumClass, enum) ->
+            enumPreferences.edit().putString(enumClass.simpleName, enum.name).apply()
         }
     }
 
     val context = this
 
-    inner class NumberField(val variable: NumberVariable, var number: Double, row: Int) {
+    fun addNumberField(variable: NumberVariable, row: Int) {
         val nameText = TextView(context).apply {
-            text = variable.name.replace("_", " ")
+            text = variable.name.formattedEnumName()
         }
 
         val numberText = EditText(context).apply {
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
-            setText(number.toRoundedString())
-            setOnFocusChangeListener { view, hasFocus ->
-                if (hasFocus) {
-                    selectedVariable = variable
-                    savedNumber = number
-                }
-            }
-
+            setText(variable.number.toRoundedString())
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(numberText: Editable?) {
                     try {
-                        number = numberText.toString().toDouble()
+                        variable.number = numberText.toString().toDouble()
                     } catch (e: Exception) {
                         "Not a number".toast(context)
                     }
                 }
             })
         }
-
-        init {
-            variableControlLayout.addView(nameText, createGridParams(row, 0))
-            variableControlLayout.addView(numberText, createGridParams(row, 1))
-        }
+        addViews(nameText, numberText, row)
     }
 
-    inner class EnumField(enumClass: Class<*>, enum: Enum<*>, row: Int) {
+    fun addEnumField(enumClass: Class<*>, enum: Enum<*>, row: Int) {
         val enums = enumClass.enumConstants!!.map { (it as Enum<*>) }
 
         val nameText = TextView(context).apply {
-            text = enumClass.simpleName.replace("_", " ")
+            text = enumClass.simpleName.formattedEnumName()
         }
 
-        val spinner = createSpinner(context, enums.map { it.name.replace("_", " ") }, enum) { view, position ->
+        val spinner = createSpinner(context, enums.map { it.name.formattedEnumName() }, enums.indexOf(enum)) { view, position ->
             enumMap[enumClass] = enums[position]
         }
 
-        init {
-            variableControlLayout.addView(nameText, createGridParams(row, 0))
-            variableControlLayout.addView(spinner, createGridParams(row, 1))
+        addViews(nameText, spinner, row)
+    }
+
+    fun addBooleanField(variable: BooleanVariable, row: Int) {
+        val booleans = listOf(variable.boolean, !variable.boolean)
+
+        val nameText = TextView(context).apply {
+            text = variable.name.formattedEnumName()
         }
+
+        val spinner = createSpinner(context, booleans.map { it.toString().capitalize() }) { view, position ->
+            variable.boolean = booleans[position]
+        }
+            addViews(nameText, spinner, row)
+    }
+
+    fun addViews(first: View, second: View, row: Int) {
+        variableControlLayout.addView(first, createGridParams(row, 0))
+        variableControlLayout.addView(second, createGridParams(row, 1))
     }
 }

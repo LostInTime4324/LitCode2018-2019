@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import org.firstinspires.ftc.robotcontroller.teamcode.GoldDetector.GoldLocation.*
+import com.qualcomm.robotcore.util.*
+import org.firstinspires.ftc.robotcontroller.teamcode.EnumVariable.GOLD_LOCATION.*
+import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.*
 import org.firstinspires.ftc.robotcore.external.ClassFactory
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector
  * Created by Victo on 9/10/2018.
  */
 
-class GoldDetector(val opMode: LinearOpMode) {
+class GoldDetector(val opMode: AutoOpMode) {
 
     private val TFOD_MODEL_ASSET = "RoverRuckus.tflite"
     private val LABEL_GOLD_MINERAL = "Gold Mineral"
@@ -36,66 +37,61 @@ class GoldDetector(val opMode: LinearOpMode) {
 
     val telemetry = opMode.telemetry
 
-    enum class GoldLocation {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-
     var goldLocation = CENTER
-
-    @Volatile var stopped = false
 
     var thread: Thread? = null
 
     fun start() {
         /** Activate Tensor Flow Object Detection.  */
         tfod.activate()
-        stopped = true
         var leftCertainty = 0
         var centerCertainty = 0
         var rightCertainty = 0
-        thread = Thread {
-            while (opMode.opModeIsActive() && !stopped) {
+        val timer = ElapsedTime()
+        try {
+            while (timer.time() < 10.0) {
+                opMode.checkForStop()
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
                 val updatedRecognitions = tfod.updatedRecognitions
+
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Obj", updatedRecognitions.size.toByte())
-                    if (updatedRecognitions.size == 2) {
+                    if (updatedRecognitions.none { it.label == LABEL_GOLD_MINERAL }) {
+                        leftCertainty++
+                    } else if (updatedRecognitions.size == 2) {
                         var goldMineralY = -1f
-                        var silverMineral1Y = -1f
-                        var silverMineral2Y = -1f
+                        var silverMineralY = -1f
+
                         for (recognition in updatedRecognitions) {
                             if (recognition.label == LABEL_GOLD_MINERAL) {
                                 goldMineralY = recognition.top
-                            } else if(silverMineral1Y == -1f){
-                                silverMineral1Y = recognition.top
                             } else {
-                                silverMineral2Y = recognition.top
+                                silverMineralY = recognition.top
                             }
-                        }
-                        if (goldMineralY != -1f) {
-                            telemetry.addData("GY", goldMineralY.toInt())
-                        }
-                        if (silverMineral1Y != -1f) {
-                            telemetry.addData("S1Y", silverMineral1Y.toInt())
-                        }
-                        if (silverMineral2Y != -1f) {
-                            telemetry.addData("S2Y", silverMineral2Y.toInt())
-                        }
-                        if (goldMineralY != -1f && silverMineral1Y != -1f && silverMineral2Y != -1f) {
-                            if (goldMineralY > silverMineral1Y && goldMineralY < silverMineral2Y) {
-                                centerCertainty++
-                            } else if(goldMineralY > silverMineral1Y && goldMineralY > silverMineral2Y){
+                            if (goldMineralY < silverMineralY) {
                                 rightCertainty++
                             } else {
-                                leftCertainty++
+                                centerCertainty++
                             }
                         }
+                    } else if (updatedRecognitions[0].label == LABEL_GOLD_MINERAL) {
+                        val goldRecognition = updatedRecognitions[0]
+                        if (goldRecognition.top < goldRecognition.imageHeight / 2) {
+                            rightCertainty++
+                        } else {
+                            centerCertainty++
+                        }
                     }
-                    telemetry.update()
                 }
+                if (leftCertainty > rightCertainty && leftCertainty > centerCertainty) {
+                    telemetry.addData("GL", "Left")
+                } else if (rightCertainty > centerCertainty) {
+                    telemetry.addData("GL", "RIGHT")
+                } else {
+                    telemetry.addData("GL", "Center")
+                }
+                telemetry.update()
             }
 
             if (leftCertainty > rightCertainty && leftCertainty > centerCertainty) {
@@ -105,12 +101,16 @@ class GoldDetector(val opMode: LinearOpMode) {
             } else {
                 goldLocation = CENTER
             }
+        } finally {
+            tfod.shutdown()
         }
-        thread!!.start()
     }
-    fun stop() {
-        stopped = true
-        thread = null
-        tfod.shutdown()
-    }
+
 }
+//    thread!!.start()
+
+//fun stop() {
+//    stopped = true
+//    thread = null
+//    tfod.shutdown()
+//}

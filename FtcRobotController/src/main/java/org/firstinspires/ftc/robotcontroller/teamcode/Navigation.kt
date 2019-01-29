@@ -1,19 +1,28 @@
 package org.firstinspires.ftc.robotcontroller.teamcode
 
 import com.qualcomm.hardware.bosch.BNO055IMU
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.CRServo
-import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode.*
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.robotcontroller.teamcode.BooleanVariable.*
+import org.firstinspires.ftc.robotcontroller.teamcode.Direction.*
 import org.firstinspires.ftc.robotcontroller.teamcode.HardwareName.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Navigation.Orientation.*
 import org.firstinspires.ftc.robotcontroller.teamcode.NumberVariable.*
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables.vars
+import org.firstinspires.ftc.robotcontroller.teamcode.opmodes.*
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder
-import kotlin.math.sign
+import kotlin.math.*
+
+enum class Direction(var sign: Int = 1) {
+    FORWARD(-1),
+    BACKWARD,
+    RIGHT(-1),
+    LEFT,
+    CW,
+    CCW(-1)
+}
+
 
 open class Navigation(opMode: OpMode) {
     val hardwareMap = opMode.hardwareMap
@@ -23,45 +32,45 @@ open class Navigation(opMode: OpMode) {
     val timer = ElapsedTime()
 
     val totemServo by lazy {
-        hardwareMap[Totem_Servo] as CRServo
+        hardwareMap[TOTEM_SERVO] as CRServo
     }
 
     val elevatorMotor by lazy {
-        MotorEx(hardwareMap[Elevator_Motor], zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE)
+        createMotor(hardwareMap[ELEVATOR_MOTOR], zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE)
     }
 
     val armMotor by lazy {
-        MotorEx(hardwareMap[Arm_Motor], zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE)
+        createMotor(hardwareMap[ARM_MOTOR], zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE)
     }
 
     val extenderMotor by lazy {
-        MotorEx(hardwareMap[Extender_Motor])
+        createMotor(hardwareMap[EXTENDER_MOTOR])
     }
 
     val intakeMotor by lazy {
-        MotorEx(hardwareMap[Intake_Motor])
+        createMotor(hardwareMap[INTAKE_MOTOR])
     }
 
-    val frontLeftMotor: DcMotor by lazy {
-        MotorEx(hardwareMap[Front_Left_Motor])
+    val frontLeftMotor by lazy {
+        createMotor(hardwareMap[FRONT_LEFT_MOTOR])
     }
 
 //    val frontLeftPID = PID("Front Left", )
 
     val backLeftMotor by lazy {
-        MotorEx(hardwareMap[Back_Left_Motor])
+        createMotor(hardwareMap[BACK_LEFT_MOTOR])
     }
 
 //    val backLeftPID = PID("Back Left", )
 
     val frontRightMotor by lazy {
-        MotorEx(hardwareMap[Front_Right_Motor], REVERSE)
+        createMotor(hardwareMap[FRONT_RIGHT_MOTOR], REVERSE)
     }
 
 //    val frontLeftPID = PID("Front Left", )
 
     val backRightMotor by lazy {
-        MotorEx(hardwareMap[Back_Right_Motor], REVERSE)
+        createMotor(hardwareMap[BACK_RIGHT_MOTOR], REVERSE)
     }
 
 //    val backLeftPID = PID("Back Left", )
@@ -69,6 +78,8 @@ open class Navigation(opMode: OpMode) {
     val motors by lazy { setOf(frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor) }
 
     val averagePosition: Double get() = motors.sumBy { it.currentPosition } / (COUNTS_PER_INCH * motors.size)
+
+    val drivePower = DrivePower()
 
     val imu: BNO055IMU by lazy {
         val params = BNO055IMU.Parameters()
@@ -78,7 +89,7 @@ open class Navigation(opMode: OpMode) {
             accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC
             loggingEnabled = false
         }
-        (hardwareMap[Imu] as BNO055IMU).apply {
+        (hardwareMap[IMU] as BNO055IMU).apply {
             initialize(params)
             angularOrientation.axesOrder = AxesOrder.ZXY
         }
@@ -87,9 +98,7 @@ open class Navigation(opMode: OpMode) {
     val COUNTS_PER_MOTOR_REV = 1120.0    // eg: TETRIX Motor Encoder
     val DRIVE_GEAR_REDUCTION = 1.0     // This is < 1.0 if geared UP
     val WHEEL_DIAMETER_INCHES = 4.0     // For figuring circumference
-    val COUNTS_PER_INCH get() = vars[Encoder_Correction_Factor] * COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION / (WHEEL_DIAMETER_INCHES * 3.1415)
-    val DRIVE_SPEED = 1
-    val TURN_SPEED = 1
+    val COUNTS_PER_INCH get() = ENCODER_CORRECTION_FACTOR.number * COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION / (WHEEL_DIAMETER_INCHES * 3.1415)
 
     fun getHeading() = imu.angularOrientation.firstAngle.toDouble()
 
@@ -105,6 +114,14 @@ open class Navigation(opMode: OpMode) {
         telemetry.update()
     }
 
+    inline fun setPower(powerSetter: DrivePower.() -> Unit) {
+        with(drivePower) {
+            powerSetter()
+            setPower(frontLeft, backLeft, frontRight, backRight)
+            resetPower()
+        }
+    }
+
     fun setPower(frontLeft: Double, backLeft: Double, frontRight: Double, backRight: Double) {
         frontLeftMotor.power = frontLeft
         backLeftMotor.power = backLeft
@@ -112,39 +129,34 @@ open class Navigation(opMode: OpMode) {
         backRightMotor.power = backRight
     }
 
-    fun setPower(left: Double, right: Double) {
-        setPower(left, left, right, right)
-    }
-
-    fun setPower(power: Double) {
-        setPower(power, power)
-    }
-
-    fun setPower(orientation: Orientation, power: Double) {
-        when (orientation) {
-            Horizontal -> setPower(-power, power, power, -power)
-            Vertical -> setPower(power)
-            Rotational -> setPower(power, -power)
+    fun setPower(power: Double, direction: Direction) {
+        val power = power * direction.sign
+        when (direction) {
+            FORWARD, BACKWARD -> setPower(power, power, power, power)
+            RIGHT, LEFT -> setPower(-power, power, power, -power)
+            CW, CCW -> setPower(-power, -power, power, power)
         }
     }
 
-    fun unsetDrivePower() {
+    fun resetDrivePower() {
         motors.forEach {
             it.power = 0.0
         }
     }
 
-    fun unsetRobotPower() {
-        unsetDrivePower()
+    fun resetRobotPower() {
+        resetDrivePower()
         elevatorMotor.power = 0.0
         extenderMotor.power = 0.0
         armMotor.power = 0.0
     }
 
-    enum class Orientation {
-        Vertical,
-        Horizontal,
-        Rotational
+
+    fun reverseDirection() {
+        FORWARD.sign *= -1
+        BACKWARD.sign *= -1
+        RIGHT.sign *= -1
+        LEFT.sign *= -1
     }
 
     fun setMode(mode: DcMotor.RunMode) {
@@ -154,15 +166,43 @@ open class Navigation(opMode: OpMode) {
     fun setTargetPosition(target: Int) {
         motors.forEach { it.targetPosition = target }
     }
+
+    class DrivePower {
+        var frontLeft = 0.0
+        var backLeft = 0.0
+        var frontRight = 0.0
+        var backRight = 0.0
+        fun addPower(frontLeft: Double, backLeft: Double, frontRight: Double, backRight: Double) {
+            this.frontLeft += frontLeft
+            this.backLeft += backLeft
+            this.frontRight += frontRight
+            this.backRight += backRight
+        }
+
+        fun addPower(power: Double, direction: Direction) {
+            val power = power * direction.sign
+            when (direction) {
+                FORWARD, BACKWARD -> addPower(power, power, power, power)
+                RIGHT, LEFT -> addPower(-power, power, power, -power)
+                CW, CCW -> addPower(-power, -power, power, power)
+            }
+        }
+
+        fun resetPower() {
+            frontLeft = 0.0
+            backLeft = 0.0
+            frontRight = 0.0
+            backRight = 0.0
+        }
+    }
 }
 
-class LinearNavigation(val opMode: LinearOpMode) : Navigation(opMode) {
+class AutoNavigation(val opMode: AutoOpMode) : Navigation(opMode) {
+    val turnPID = PID("Turn", TURN_KP.number, TURN_KD.number, TURN_KI.number)
+    val turnCorrectionPID = PID("Turn Correction", TURN_CORRECTION_KP.number, TURN_CORRECTION_KD.number, TURN_CORRECTION_KI.number)
+    val drivePID = PID("Drive", DRIVE_KP.number, DRIVE_KD.number, DRIVE_KI.number)
 
-    val turnPID = PID("Turn", vars[Turn_Kp], vars[Turn_Kd], vars[Turn_Ki])
-    val turnCorrectionPID = PID("Turn Correction", vars[Turn_Correction_Kp], vars[Turn_Correction_Kd], vars[Turn_Correction_Ki])
-    val drivePID = PID("Drive", vars[Drive_Kp], vars[Drive_Kd], vars[Drive_Ki])
-
-    fun DcMotor.move(seconds: Double, power: Double) {
+    fun DcMotorSimple.move(seconds: Double, power: Double) {
         this.power = power
         wait(seconds)
         this.power = 0.0
@@ -170,51 +210,52 @@ class LinearNavigation(val opMode: LinearOpMode) : Navigation(opMode) {
 
     fun dropElevator() {
         telemetry.addData("Dropping", "Elevator")
-        elevatorMotor.move(vars[Elevator_Power], vars[Elevator_Move_Time])
-        driveByTime(0.3, 0.5)
-        elevatorMotor.move(-vars[Elevator_Power], vars[Elevator_Move_Time])
+        elevatorMotor.move(ELEVATOR_MOVE_TIME.number, ELEVATOR_POWER.number)
+//        driveByTime(0.5, -0.5, BACKWARD)
+//        elevatorMotor.move(ELEVATOR_MOVE_TIME.number, -ELEVATOR_POWER.number)
     }
 
     fun dropTotem() {
         telemetry.addData("Dropping", "Totem")
-        wait(vars[Totem_Move_Time]) {
-            totemServo.power = vars[Totem_Power]
+        if(USE_SERVO.boolean) {
+            totemServo.move(TOTEM_MOVE_TIME.number, TOTEM_POWER.number)
+            driveByTime(2.0, DRIVE_SERVO_POWER.number)
+        } else {
+            driveByTime(2.0, DRIVE_SERVO_POWER.number)
+            driveByTime(2.0, -DRIVE_SERVO_POWER.number)
         }
-        totemServo.power = 0.0
     }
 
     fun turn(degrees: Double) {
-        telemetry.addData("Turning", degrees)
-        telemetry.update()
-        wait(2.0)
-        turnByGyro(degrees)
+//        telemetry.addData("Turning", degrees)
+//        telemetry.update()
+//        wait(2.0)
+        turnByTime(degrees)
     }
 
     fun turnByGyro(degrees: Double) {
         val target = getHeading() - degrees
         val startTime = timer.time()
-        try {
-            do {
-                val err = getHeading() - target
-                val power = turnPID.getPower(err)
-                telemetry.update()
-                setPower(power, -power)
-            } while (turnPID.isMoving() && timer.time() - startTime < 5)
-        } finally {
-            turnPID.createGraphs()
-            unsetDrivePower()
-        }
+        do {
+            val err = getHeading() - target
+            val power = turnPID.getPower(err)
+            setPower(power, CW)
+            opMode.checkForStop()
+        } while (turnPID.isMoving() && timer.time() - startTime < 5)
+
+        turnPID.createGraphs()
+        resetDrivePower()
     }
 
-    fun turnByTime(seconds: Double, power: Double = vars[Drive_Power]) {
-        setPower(power * seconds.sign, -power * seconds.sign)
-        wait(seconds)
+    fun turnByTime(seconds: Double, power: Double = DRIVE_POWER.number) {
+        setPower(power * seconds.sign, CW)
+        wait(abs(seconds))
     }
 
     fun drive(inches: Double) {
-        telemetry.addData("Driving", inches)
-        telemetry.update()
-        wait(2.0)
+//        telemetry.addData("Driving", inches)
+//        telemetry.update()
+//        wait(2.0)
         driveByEncoder(inches)
     }
 
@@ -224,53 +265,49 @@ class LinearNavigation(val opMode: LinearOpMode) : Navigation(opMode) {
         do {
             val correctionPower = turnCorrectionPID.getPower(startHeading - getHeading())
             val drivePower = drivePID.getPower(averagePosition - inches)
-            setPower(drivePower + correctionPower, drivePower - correctionPower)
-        } while (drivePID.isMoving() && opMode.opModeIsActive() == true)
+            setPower {
+                addPower(drivePower, FORWARD)
+                addPower(correctionPower, CW)
+            }
+            opMode.checkForStop()
+        } while (drivePID.isMoving())
         turnCorrectionPID.createGraphs()
         drivePID.createGraphs()
     }
 
-    fun driveByEncoder(distance: Double, power: Double = vars[Drive_Power]) {
+    fun driveByEncoder(distance: Double, power: Double = DRIVE_POWER.number) {
         motors.forEach {
             it.mode = RUN_TO_POSITION
             it.targetPosition = it.currentPosition + (distance * COUNTS_PER_INCH).toInt()
         }
-        setPower(power)
+        setPower(power, FORWARD)
         val heading = getHeading()
-        val (workingMotors, brokenMotors) = motors.partition { it.targetPosition != 0 }
-        while (motors.all { it.isBusy } && opMode.opModeIsActive() == true) {
-            // Display it for the driver.
-//            val correction = turnCorrectionPID.getPower(heading - getHeading())
-//            setPower(power , power)
-//            brokenMotors.forEach { it.power = workingMotors.first().power }
+        while (motors.all { it.isBusy }) {
+            val correction = turnCorrectionPID.getPower(heading - getHeading())
+            setPower {
+                addPower(power, FORWARD)
+                addPower(correction, CW)
+            }
             logEncoderValues()
+            opMode.checkForStop()
         }
         motors.forEach {
             it.mode = STOP_AND_RESET_ENCODER
             it.mode = RUN_USING_ENCODER
         }
-        unsetDrivePower()
+        resetDrivePower()
     }
 
-    fun driveByTime(seconds: Double, speed: Double = vars[Drive_Power]) {
-        wait(seconds) {
-            setPower(speed * seconds.sign)
-        }
-        unsetDrivePower()
+    fun driveByTime(seconds: Double, speed: Double = DRIVE_POWER.number, direction: Direction = FORWARD) {
+        setPower(speed * seconds.sign, direction)
+        wait(seconds)
+        resetDrivePower()
     }
 
-    fun wait(seconds: Double, runnable: () -> Unit = {}) {
+    fun wait(seconds: Double) {
         val startTime = timer.time()
-        while(timer.time() - startTime < seconds && opMode.opModeIsActive()) {
-            try {
-                Thread.sleep(10)
-            } catch (e: InterruptedException) {
-                unsetRobotPower()
-                telemetry.addData("Interrupted", e.message)
-                telemetry.update()
-                Thread.sleep(3000)
-                return
-            }
+        while (timer.time() - startTime < seconds) {
+            opMode.checkForStop()
         }
     }
 }

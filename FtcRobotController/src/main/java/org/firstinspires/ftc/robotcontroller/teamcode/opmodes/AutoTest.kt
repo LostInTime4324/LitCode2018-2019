@@ -1,53 +1,74 @@
 package org.firstinspires.ftc.robotcontroller.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import org.firstinspires.ftc.robotcontroller.teamcode.*
 import org.firstinspires.ftc.robotcontroller.teamcode.EnumVariable.*
-import org.firstinspires.ftc.robotcontroller.teamcode.EnumVariable.AutoType.*
-import org.firstinspires.ftc.robotcontroller.teamcode.LinearNavigation
+import org.firstinspires.ftc.robotcontroller.teamcode.EnumVariable.AUTO_TEST.*
+import org.firstinspires.ftc.robotcontroller.teamcode.EnumVariable.AUTO_TEST.DETECT
+import org.firstinspires.ftc.robotcontroller.teamcode.EnumVariable.GOLD_LOCATION.*
+import org.firstinspires.ftc.robotcontroller.teamcode.NumberVariable.*
 import org.firstinspires.ftc.robotcontroller.teamcode.Variables.enums
-import org.firstinspires.ftc.robotcontroller.teamcode.Variables as vars
-
 
 @Autonomous(name = "AutoTest")
-class AutoTest : LinearOpMode() {
-    val nav by lazy {
-        LinearNavigation(this)
-    }
-
-    override fun runOpMode() {
-        when(enums<AutoType>()) {
-            Depot_No_Totem -> {}
-
-//             -> {
-//                nav.driveByEncoder(vars[Test_Variable])
-//            }
-//            1.0 -> {
-//                nav.driveByPID(vars[Test_Variable])
-//            }
-//            2.0 -> {
-//                nav.driveByTime(vars[Test_Variable])
-//            }
-//            3.0 -> {
-//                nav.turnByGyro(vars[Test_Variable])
-//            }
-//            4.0 -> {
-//                nav.turnByTime(vars[Test_Variable])
-//            }
-//            4.0 -> {
-//
-//                nav.armMotor.power = vars[Drive_Power]
-//                nav.wait(vars[Test_Variable])
-//                nav.armMotor.power = 0.0
-//            }
-//            5.0 -> {
-//                nav.extenderMotor.power = vars[Drive_Power]
-//                nav.wait(vars[Test_Variable])
-//                nav.extenderMotor.power = 0.0
-//            }
-//            6.0 -> {
-//
-//            }
+class AutoTest : AutoOpMode() {
+//    val nav by lazy {
+//                AutoNavigation(this)
+//    }
+    override fun run() {
+        when (enums<AUTO_TEST>()) {
+            WAIT -> {
+                nav.wait(TEST_VARIABLE.number)
+            }
+            DETECT -> {
+                val detector = GoldDetector(this)
+                detector.start()
+            }
+            DRIVE_BY_ENCODERS -> {
+                nav.driveByEncoder(TEST_VARIABLE.number)
+            }
+            DRIVE_BY_PID -> {
+                nav.driveByPID(TEST_VARIABLE.number)
+            }
+            DRIVE_BY_TIME -> {
+                nav.driveByTime(TEST_VARIABLE.number)
+            }
+            TURN_BY_GYRO -> {
+                nav.turnByGyro(TEST_VARIABLE.number)
+            }
+            TURN_BY_TIME -> {
+                nav.turnByTime(TEST_VARIABLE.number)
+            }
+            DROP_TOTEM -> {
+                nav.dropTotem()
+            }
+            DROP_ELEVATOR -> {
+                nav.dropElevator()
+            }
+            PUSH_MINERAL -> {
+                val detector = GoldDetector(this)
+                detector.start()
+                val goldLocation = detector.goldLocation
+                when (goldLocation) {
+                    LEFT -> {
+                        nav.turn(ANGLE_TO_CENTER_MINERAL.number - ANGLE_TO_SIDE_MINERAL.number)
+                        nav.drive(DISTANCE_TO_SIDE_MINERAL.number)
+                        nav.turn(2 * ANGLE_TO_SIDE_MINERAL.number)
+                        nav.drive(DISTANCE_TO_DEPOT_ON_SIDE.number)
+                    }
+                    CENTER, GOLD_LOCATION.DETECT -> {
+                        nav.turn(ANGLE_TO_CENTER_MINERAL.number)
+                        nav.drive(DISTANCE_TO_CENTER_MINERAL.number)
+                        nav.drive(DISTANCE_TO_DEPOT_ON_CENTER.number)
+                    }
+                    RIGHT -> {
+                        nav.turn(ANGLE_TO_CENTER_MINERAL.number + ANGLE_TO_SIDE_MINERAL.number)
+                        nav.drive(DISTANCE_TO_SIDE_MINERAL.number)
+                        nav.turn(2 * -ANGLE_TO_SIDE_MINERAL.number)
+                        nav.drive(DISTANCE_TO_DEPOT_ON_SIDE.number)
+                    }
+                }
+                nav.dropTotem()
+            }
         }
     }
 }
